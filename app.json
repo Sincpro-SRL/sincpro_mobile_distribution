@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Distribution",
+    "slug": "sincpro-mobile-distribution",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "icon": "./assets/DISTRIBUTION/icon.png",
+    "android": {
+      "package": "bo.com.sincpro.distribution",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/DISTRIBUTION/adaptive-icon-foreground.png",
+        "backgroundColor": "#2563EB"
+      }
+    },
+    "ios": { "bundleIdentifier": "bo.com.sincpro.distribution" },
+    "plugins": [
+      "expo-sqlite",
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/DISTRIBUTION/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#2563EB",
+          "dark": {
+            "image": "./assets/DISTRIBUTION/splash.png",
+            "backgroundColor": "#1E3A8A"
+          }
+        }
+      ]
+    ]
+  }
+}

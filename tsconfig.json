@@ -1,0 +1,15 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "jsxImportSource": "nativewind",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sincpro/mobile-distribution/*": ["./sincpro_mobile_distribution/*"],
+      "@sincpro/mobile-distribution": ["./sincpro_mobile_distribution/index.ts"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "nativewind-env.d.ts"]
+}

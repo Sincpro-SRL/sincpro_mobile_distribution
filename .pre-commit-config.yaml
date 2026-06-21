@@ -1,0 +1,10 @@
+repos:
+  - repo: local
+    hooks:
+      - id: make-verify
+        name: Validate guardrails (lint + types + format)
+        entry: make verify
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true
