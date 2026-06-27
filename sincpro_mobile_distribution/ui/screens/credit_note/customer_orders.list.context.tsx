@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { CreditNoteCreatedEvent } from "@sincpro/mobile-distribution/domain/credit_note/events";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
@@ -15,7 +16,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface ICustomerOrdersListContext {
   customers: Customer[];
@@ -109,18 +109,18 @@ export function CustomerOrdersListProvider({ children }: CustomerOrdersListProvi
     setIsLoading(false);
   }, []);
 
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const handleSelectCustomer = useCallback(
     (customer: Customer) => {
-      navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, { state: { customer } });
+      (navigation as any).navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, { customer });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleBack = useCallback(() => {
-    navigate(AppScreen.MAIN);
-  }, [navigate]);
+    navigation.dispatch(StackActions.popToTop());
+  }, [navigation]);
 
   useEffect(() => {
     const reload = () => void loadCustomers();

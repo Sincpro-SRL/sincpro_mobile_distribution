@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import {
   EPaymentTargetType,
   type Payment,
@@ -11,7 +12,6 @@ import { Typography } from "@sincpro/mobile-ui/Typography";
 import { ListViewV2 } from "@sincpro/mobile-ui/views/ListViewV2";
 import { useState } from "react";
 import { Modal, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { useNavigate } from "react-router-native";
 
 const TARGET_TYPE_COLORS: Record<EPaymentTargetType, string> = {
   [EPaymentTargetType.SALE_ORDER]: "#7C54F9",
@@ -34,7 +34,7 @@ interface MenuOption {
 
 function CashierPaymentRow({ payment, onPress, formatDate }: CashierPaymentRowProps) {
   const [menuVisible, setMenuVisible] = useState(false);
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const iconColor = payment.targetType
     ? TARGET_TYPE_COLORS[payment.targetType] || "#7C54F9"
@@ -52,8 +52,8 @@ function CashierPaymentRow({ payment, onPress, formatDate }: CashierPaymentRowPr
   function handleViewEntity() {
     setMenuVisible(false);
     if (payment.paidEntity) {
-      navigate(AppScreen.ORDER_RECEIPT, {
-        state: { entity: payment.paidEntity },
+      (navigation as any).navigate(AppScreen.ORDER_RECEIPT as never, {
+        entity: payment.paidEntity,
       });
     }
   }
@@ -61,16 +61,17 @@ function CashierPaymentRow({ payment, onPress, formatDate }: CashierPaymentRowPr
   function handleViewReceipt() {
     setMenuVisible(false);
     if (payment.paidEntity) {
-      navigate(AppScreen.ORDER_RECEIPT, {
-        state: { entity: payment.paidEntity },
+      (navigation as any).navigate(AppScreen.ORDER_RECEIPT as never, {
+        entity: payment.paidEntity,
       });
     }
   }
 
   function handleViewPaymentDetail() {
     setMenuVisible(false);
-    navigate(AppScreen.PAYMENT_DETAIL, {
-      state: { payment, paymentId: payment.uuid },
+    (navigation as any).navigate(AppScreen.PAYMENT_DETAIL as never, {
+      payment,
+      paymentId: payment.uuid,
     });
   }
 

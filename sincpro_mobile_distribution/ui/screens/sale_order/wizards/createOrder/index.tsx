@@ -1,7 +1,7 @@
+import { useRoute } from "@react-navigation/native";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { Product } from "@sincpro/mobile-distribution/domain/product";
 import { Wizard } from "@sincpro/mobile-ui/views/Wizard";
-import { useLocation } from "react-router-native";
 
 import { CreateOrderWizardProvider, ECreateOrderStep } from "./context";
 import { StepOverview } from "./step1.overview";
@@ -37,9 +37,9 @@ function CreateOrderWizardContent() {
 }
 
 export function SaleOrderCreateOrderWizard() {
-  const location = useLocation();
-  const initialCustomer = (location.state?.customer as Customer) || null;
-  const initialProduct = (location.state?.product as Product) || null;
+  const route = useRoute();
+  const initialCustomer = ((route.params as any)?.customer as Customer) || null;
+  const initialProduct = ((route.params as any)?.product as Product) || null;
 
   return (
     <CreateOrderWizardProvider

@@ -1,4 +1,3 @@
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { createContext, ReactNode, useContext } from "react";
 import { View } from "react-native";

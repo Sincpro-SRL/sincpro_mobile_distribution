@@ -1,7 +1,6 @@
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { CustomerRow } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { ListViewV2 } from "@sincpro/mobile-ui/views/ListViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { Children, isValidElement, ReactElement, ReactNode } from "react";
 
 interface CustomerListTemplateProps {
@@ -37,6 +36,10 @@ function FloatingButton({ children }: SlotProps) {
   return <>{children}</>;
 }
 
+function AppBarActions({ children }: SlotProps) {
+  return <>{children}</>;
+}
+
 function CustomerListTemplateRoot({
   customers,
   isLoading,
@@ -50,6 +53,7 @@ function CustomerListTemplateRoot({
   children,
 }: CustomerListTemplateProps) {
   let headerActionsSlot: ReactNode = null;
+  let appBarActionsSlot: ReactNode = null;
   let filtersSlot: ReactNode = null;
   let footerSlot: ReactNode = null;
   let floatingButtonSlot: ReactNode = null;
@@ -60,6 +64,8 @@ function CustomerListTemplateRoot({
     const element = child as ReactElement<SlotProps>;
     if (child.type === HeaderActions) {
       headerActionsSlot = element.props.children;
+    } else if (child.type === AppBarActions) {
+      appBarActionsSlot = element.props.children;
     } else if (child.type === Filters) {
       filtersSlot = element.props.children;
     } else if (child.type === Footer) {
@@ -81,7 +87,7 @@ function CustomerListTemplateRoot({
       }}
       onSearch={onSearch}
     >
-      <ListViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER}>
+      <ListViewV2.Header actions={appBarActionsSlot ?? undefined} variant="default">
         <ListViewV2.Header.Search />
         {headerActionsSlot && (
           <ListViewV2.Header.Actions>{headerActionsSlot}</ListViewV2.Header.Actions>
@@ -111,6 +117,7 @@ function CustomerListTemplateRoot({
 
 export const CustomerListTemplate = Object.assign(CustomerListTemplateRoot, {
   HeaderActions,
+  AppBarActions,
   Filters,
   Footer,
   FloatingButton,

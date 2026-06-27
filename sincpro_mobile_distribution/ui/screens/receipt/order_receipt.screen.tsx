@@ -1,3 +1,4 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ReceiptExporterAdapter } from "@sincpro/mobile/adapters/ReceiptExporter.adapter";
 import { ISelectedPrinter } from "@sincpro/mobile/domain/print";
 import { IReceiptExporter } from "@sincpro/mobile/domain/receipt";
@@ -12,16 +13,14 @@ import { Form } from "@sincpro/mobile-ui/Form";
 import PrinterIcon from "@sincpro/mobile-ui/icons/PrinterIcon";
 import { theme } from "@sincpro/mobile-ui/theme";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
-import { useLocation, useNavigate } from "react-router-native";
 
 type ReceiptEntity = Invoice | CreditNote | CashClosureReport;
 
 function OrderReceiptScreen() {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigation = useNavigation();
+  const route = useRoute();
   const receiptRef = useRef<View>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPrinter, setSelectedPrinter] = useState<ISelectedPrinter | null>(null);
@@ -31,7 +30,7 @@ function OrderReceiptScreen() {
     printerService.getSelectedPrinter().then(setSelectedPrinter);
   }, []);
 
-  const entityPayable = (location.state?.entity as IReceiptExporter) || null;
+  const entityPayable = ((route.params as any)?.entity as IReceiptExporter) || null;
 
   function isCashClosureReport(): boolean {
     return entityPayable instanceof CashClosureReport;
@@ -82,7 +81,7 @@ function OrderReceiptScreen() {
   }
 
   function handleReturn() {
-    navigate(getReturnDestination());
+    navigation.navigate(getReturnDestination() as never);
   }
 
   async function handlePrint() {
@@ -116,7 +115,7 @@ function OrderReceiptScreen() {
     >
       <FormViewV2.Header
         logoSource={require("../../../../assets/DISTRIBUTION/logo.png")}
-        variant={EVariantScreenHeader.ONLY_LOGO}
+        variant="default"
       />
 
       <FormViewV2.Content>

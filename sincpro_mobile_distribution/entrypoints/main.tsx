@@ -9,7 +9,10 @@ import DistributionMigrations from "@sincpro/mobile-distribution/entrypoints/db/
 import DistributionRepositoryRegistry from "@sincpro/mobile-distribution/entrypoints/db/repositories";
 import { DistributionSubscribers } from "@sincpro/mobile-distribution/entrypoints/queue";
 import { DistributionApp } from "@sincpro/mobile-distribution/entrypoints/ui/App";
-import { DISTRIBUTION_THEME } from "@sincpro/mobile-distribution/entrypoints/ui/theme/tokens";
+import {
+  DISTRIBUTION_DARK_THEME,
+  DISTRIBUTION_THEME,
+} from "@sincpro/mobile-distribution/entrypoints/ui/theme/tokens";
 import { odooModule } from "@sincpro/mobile-odoo";
 import { ConfirmationProvider } from "@sincpro/mobile-ui/Dialog";
 import type { ComponentType } from "react";
@@ -40,9 +43,11 @@ export const distributionModule = new DistributionModule();
 export function createDistributionApp(): ComponentType {
   return createAppShell({
     theme: createTheme(DISTRIBUTION_THEME),
+    darkTheme: createTheme(DISTRIBUTION_DARK_THEME),
     domains: [odooModule, distributionModule],
     ui: { [distributionModule.key]: DistributionApp },
     activeDomain: distributionModule.key,
     providers: [ConfirmationProvider, ProcessToastProvider],
+    branding: { logo: require("../../assets/DISTRIBUTION/logo.png") },
   });
 }

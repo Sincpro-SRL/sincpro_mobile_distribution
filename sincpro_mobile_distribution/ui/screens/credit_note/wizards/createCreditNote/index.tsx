@@ -1,7 +1,7 @@
+import { useRoute } from "@react-navigation/native";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import type { SaleOrder } from "@sincpro/mobile-distribution/domain/sale_order";
 import { Wizard } from "@sincpro/mobile-ui/views/Wizard";
-import { useLocation } from "react-router-native";
 
 import {
   CreateCreditNoteWizardProvider,
@@ -45,9 +45,9 @@ export function CreateCreditNoteWizard({
   originalOrder,
   customer,
 }: CreateCreditNoteWizardProps) {
-  const location = useLocation();
-  const orderFromState = location.state?.originalOrder as SaleOrder | undefined;
-  const customerFromState = location.state?.customer as Customer | undefined;
+  const route = useRoute();
+  const orderFromState = (route.params as any)?.originalOrder as SaleOrder | undefined;
+  const customerFromState = (route.params as any)?.customer as Customer | undefined;
 
   const resolvedOrder = originalOrder ?? orderFromState;
   const resolvedCustomer = customer ?? customerFromState ?? null;

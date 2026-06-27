@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { CreditNote } from "@sincpro/mobile-distribution/domain/credit_note";
 import {
@@ -18,7 +19,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface ICustomerOrdersDetailContext {
   customer: Customer;
@@ -52,7 +52,7 @@ export function CustomerOrdersDetailProvider({
   const [creditNotes, setCreditNotes] = useState<CreditNote[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<SaleOrder | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const loadCustomerData = useCallback(async () => {
     if (!customer?.remoteId) {
@@ -137,21 +137,22 @@ export function CustomerOrdersDetailProvider({
 
   const handleSelectCreditNote = useCallback(
     (creditNote: CreditNote) => {
-      navigate(AppScreen.CREDIT_NOTE_DETAIL, { state: { creditNote, customer } });
+      (navigation as any).navigate(AppScreen.CREDIT_NOTE_DETAIL, { creditNote, customer });
     },
-    [navigate, customer],
+    [navigation, customer],
   );
 
   const handleCreateCreditNote = useCallback(() => {
     if (!selectedOrder || !customer) return;
-    navigate(AppScreen.CREDIT_NOTE_CREATE, {
-      state: { originalOrder: selectedOrder, customer },
+    (navigation as any).navigate(AppScreen.CREDIT_NOTE_CREATE, {
+      originalOrder: selectedOrder,
+      customer,
     });
-  }, [navigate, selectedOrder, customer]);
+  }, [navigation, selectedOrder, customer]);
 
   const handleBack = useCallback(() => {
-    navigate(AppScreen.CUSTOMER_ORDERS_LIST);
-  }, [navigate]);
+    navigation.navigate(AppScreen.CUSTOMER_ORDERS_LIST as never);
+  }, [navigation]);
 
   useEffect(() => {
     const reload = () => void loadCustomerData();

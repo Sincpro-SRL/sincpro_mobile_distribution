@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { ERemoteState } from "@sincpro/mobile/domain/entity";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
@@ -19,7 +20,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface ICreditNoteDetailContext {
   creditNote: CreditNote;
@@ -54,7 +54,7 @@ export function CreditNoteDetailProvider({
   creditNote: initialCreditNote,
   customer,
 }: CreditNoteDetailProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
   const [creditNote, setCreditNote] = useState<CreditNote>(initialCreditNote);
   const [isLoading, setIsLoading] = useState(false);
@@ -129,8 +129,8 @@ export function CreditNoteDetailProvider({
     if (!creditNote || !customer) return;
 
     if (isPaid) {
-      navigate(AppScreen.PAYMENT_HISTORY, {
-        state: { filteredPayments: creditNote.payments.toArray() },
+      (navigation as any).navigate(AppScreen.PAYMENT_HISTORY, {
+        filteredPayments: creditNote.payments.toArray(),
       });
       return;
     }
@@ -157,8 +157,10 @@ export function CreditNoteDetailProvider({
         cancelText: "Cancelar",
         onConfirm: () => {
           hide();
-          navigate(AppScreen.CREDIT_NOTE_PAYMENT, {
-            state: { creditNote, customer, payments: [] },
+          (navigation as any).navigate(AppScreen.CREDIT_NOTE_PAYMENT, {
+            creditNote,
+            customer,
+            payments: [],
           });
         },
         onCancel: () => hide(),
@@ -166,10 +168,12 @@ export function CreditNoteDetailProvider({
       return;
     }
 
-    navigate(AppScreen.CREDIT_NOTE_PAYMENT, {
-      state: { creditNote, customer, payments: [] },
+    (navigation as any).navigate(AppScreen.CREDIT_NOTE_PAYMENT, {
+      creditNote,
+      customer,
+      payments: [],
     });
-  }, [creditNote, customer, isPaid, isDraft, hasRemoteId, navigate, show, hide]);
+  }, [creditNote, customer, isPaid, isDraft, hasRemoteId, navigation, show, hide]);
 
   const handleViewReceipt = useCallback(() => {
     if (!creditNote) return;
@@ -187,16 +191,16 @@ export function CreditNoteDetailProvider({
       return;
     }
 
-    navigate(AppScreen.ORDER_RECEIPT, { state: { entity: creditNote } });
-  }, [creditNote, navigate, show, hide]);
+    (navigation as any).navigate(AppScreen.ORDER_RECEIPT, { entity: creditNote });
+  }, [creditNote, navigation, show, hide]);
 
   const handleBack = useCallback(() => {
     if (customer) {
-      navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, { state: { customer } });
+      (navigation as any).navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, { customer });
     } else {
-      navigate(AppScreen.CUSTOMER_ORDERS_LIST);
+      navigation.navigate(AppScreen.CUSTOMER_ORDERS_LIST as never);
     }
-  }, [customer, navigate]);
+  }, [customer, navigation]);
 
   useEffect(() => {
     if (initialCreditNote) {

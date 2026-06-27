@@ -1,7 +1,6 @@
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { CustomerRow } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { ListViewV2 } from "@sincpro/mobile-ui/views/ListViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useEffect } from "react";
 
 import {
@@ -36,7 +35,7 @@ function CustomerOrdersListContent() {
       onRefresh={refreshFromBackend}
       onSearch={searchCustomers}
     >
-      <ListViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER}>
+      <ListViewV2.Header variant="default">
         <ListViewV2.Header.Search />
       </ListViewV2.Header>
 

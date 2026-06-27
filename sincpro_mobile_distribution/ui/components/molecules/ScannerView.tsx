@@ -1,5 +1,4 @@
 import { Form } from "@sincpro/mobile-ui";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { CameraView } from "expo-camera";
 import { View } from "react-native";

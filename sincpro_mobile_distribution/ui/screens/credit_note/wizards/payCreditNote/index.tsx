@@ -1,8 +1,8 @@
+import { useRoute } from "@react-navigation/native";
 import type { CreditNote } from "@sincpro/mobile-distribution/domain/credit_note";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import type { Payment } from "@sincpro/mobile-distribution/domain/payment";
 import { Wizard } from "@sincpro/mobile-ui/views/Wizard";
-import { useLocation } from "react-router-native";
 
 import {
   EPayCreditNoteStep,
@@ -43,10 +43,10 @@ export function PayCreditNoteWizard({
   customer,
   payments,
 }: PayCreditNoteWizardProps) {
-  const location = useLocation();
-  const creditNoteFromState = location.state?.creditNote as CreditNote | undefined;
-  const customerFromState = location.state?.customer as Customer | undefined;
-  const paymentsFromState = location.state?.payments as Payment[] | undefined;
+  const route = useRoute();
+  const creditNoteFromState = (route.params as any)?.creditNote as CreditNote | undefined;
+  const customerFromState = (route.params as any)?.customer as Customer | undefined;
+  const paymentsFromState = (route.params as any)?.payments as Payment[] | undefined;
 
   const resolvedCreditNote = creditNote ?? creditNoteFromState;
   const resolvedCustomer = customer ?? customerFromState ?? null;

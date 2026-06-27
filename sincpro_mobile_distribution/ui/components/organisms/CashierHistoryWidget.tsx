@@ -1,9 +1,8 @@
+import { useNavigation } from "@react-navigation/native";
 import type { Payment } from "@sincpro/mobile-distribution/domain/payment";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { View } from "react-native";
-import { useNavigate } from "react-router-native";
 
 import CashierPaymentRow from "../molecules/CashierPaymentRow";
 
@@ -20,10 +19,10 @@ function CashierHistoryWidget({
   onPaymentPress,
   maxItems = 5,
 }: CashierHistoryWidgetProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   function handleViewAll() {
-    navigate(AppScreen.CASHIER_HISTORY);
+    navigation.navigate(AppScreen.CASHIER_HISTORY as never);
   }
 
   function handlePaymentPress(payment: Payment) {

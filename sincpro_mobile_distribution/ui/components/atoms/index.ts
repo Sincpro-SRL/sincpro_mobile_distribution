@@ -1,5 +1,4 @@
 export { default as CashierStatusBadge } from "./CashierStatusBadge";
-export { CircleButton } from "./CircleButton";
 export { CustomerAvatar } from "./CustomerAvatar";
 export { CustomerCreditBadge } from "./CustomerCreditBadge";
 export { CustomerExemptBadge } from "./CustomerExemptBadge";

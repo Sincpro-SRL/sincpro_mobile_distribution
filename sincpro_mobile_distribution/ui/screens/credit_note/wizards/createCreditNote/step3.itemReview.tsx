@@ -1,10 +1,8 @@
 import { Display } from "@sincpro/mobile-ui/Display";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
 import type { WizardContextValue } from "@sincpro/mobile-ui/views/Wizard";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useCallback, useMemo, useState } from "react";
 import { View } from "react-native";
 
@@ -176,7 +174,7 @@ export function StepItemReview({ wizard }: StepItemReviewProps) {
       name="Detalle de producto"
       onBack={handleBack}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Groups>

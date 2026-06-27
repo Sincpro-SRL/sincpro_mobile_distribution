@@ -1,10 +1,10 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { ERouteStatusType, Route } from "@sincpro/mobile-distribution/domain/route";
 import {
   RemoteRouteChangedEvent,
   RoutePlanFetchedEvent,
 } from "@sincpro/mobile-distribution/domain/route/events";
-import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
 import { routeService } from "@sincpro/mobile-distribution/services/route.service";
 import React, {
   createContext,
@@ -15,7 +15,6 @@ import React, {
   useState,
 } from "react";
 import { Alert } from "react-native";
-import { useNavigate } from "react-router-native";
 
 interface IRouteContext {
   route: Route | null;
@@ -130,15 +129,15 @@ export function RouteProvider({ children, onBack }: RouteProviderProps) {
     setError(null);
   }, []);
 
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const handleBack = useCallback(() => {
     if (onBack) {
       onBack();
     } else {
-      navigate(AppScreen.MAIN);
+      navigation.dispatch(StackActions.popToTop());
     }
-  }, [onBack, navigate]);
+  }, [onBack, navigation]);
 
   useEffect(() => {
     const reload = () => void loadActiveRoute();

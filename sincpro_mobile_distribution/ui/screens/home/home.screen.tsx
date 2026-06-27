@@ -1,7 +1,7 @@
+import { useNavigation } from "@react-navigation/native";
 import { IconType } from "@sincpro/mobile/domain/icon";
 import { useCommon } from "@sincpro/mobile/entrypoints/ui/common_provider";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
-import { HomeHeader } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { MenuGrid } from "@sincpro/mobile-distribution/ui/components/organisms";
 import {
   HomeProvider,
@@ -14,15 +14,18 @@ import BoxTimeIcon from "@sincpro/mobile-ui/icons/BoxTimeIcon";
 import CardIcon from "@sincpro/mobile-ui/icons/CardIcon";
 import DuoIcon from "@sincpro/mobile-ui/icons/DuoIcon";
 import OdooIcon from "@sincpro/mobile-ui/icons/OdooIcon";
+import { AppBar } from "@sincpro/mobile-ui/Navigation/Navigation.AppBar";
+import { useTheme } from "@sincpro/mobile-ui/theme";
 import { ComponentType } from "react";
 import { ScrollView, View } from "react-native";
-import { useNavigate } from "react-router-native";
 
 function HomeScreenComponent() {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { debugMode } = useCommon();
+  const theme = useTheme();
+  const isDark = theme.name.includes("dark");
   useHome();
-  const handleMenuPress = (route: AppScreen) => navigate(route);
+  const handleMenuPress = (route: AppScreen) => navigation.navigate(route as never);
 
   const menuItems: {
     id: string;
@@ -95,7 +98,26 @@ function HomeScreenComponent() {
 
   return (
     <View className="flex-1">
-      <HomeHeader title="Distribución" />
+      <AppBar
+        background={
+          isDark
+            ? {
+                colors: ["#1E3A5F", "#1D4ED8", "#2563EB"] as const,
+                pattern: "grid",
+                patternOpacity: 0.12,
+              }
+            : {
+                colors: ["#1D4ED8", "#2563EB", "#3B82F6"] as const,
+                pattern: "grid",
+                patternOpacity: 0.08,
+              }
+        }
+        bottomDivider="wave"
+        safeArea={false}
+        title="Distribución"
+        topSpacing={40}
+        variant="large"
+      />
       <View className="flex-1">
         <ScrollView contentContainerClassName="flex-grow">
           <MenuGrid items={menuItems} />

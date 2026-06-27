@@ -4,7 +4,6 @@ import {
   SaleOrderInvoice,
 } from "@sincpro/mobile-distribution/domain/sale_order";
 import { BadgeVariants, Display } from "@sincpro/mobile-ui/Display";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn, tv } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { TouchableOpacity, View } from "react-native";

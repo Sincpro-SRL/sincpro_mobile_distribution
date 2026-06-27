@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import {
@@ -14,7 +15,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 export type CustomerCreditFilter = "all" | "with_credit" | "without_credit";
 
@@ -38,7 +38,7 @@ interface ICustomerListContext {
 const CustomerListContext = createContext<ICustomerListContext | null>(null);
 
 export function CustomerListProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const [allCustomers, setAllCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -109,25 +109,25 @@ export function CustomerListProvider({ children }: { children: React.ReactNode }
 
   const handleSelectCustomer = useCallback(
     (customer: Customer) => {
-      navigate(AppScreen.SALE_ORDER_CREATE, { state: { customer } });
+      (navigation as any).navigate(AppScreen.SALE_ORDER_CREATE, { customer });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleViewDetail = useCallback(
     (customer: Customer) => {
-      navigate(AppScreen.CUSTOMER_DETAIL, { state: { customer } });
+      (navigation as any).navigate(AppScreen.CUSTOMER_DETAIL, { customer });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleCreateCustomer = useCallback(() => {
-    navigate(AppScreen.CUSTOMER_CREATE);
-  }, [navigate]);
+    navigation.navigate(AppScreen.CUSTOMER_CREATE as never);
+  }, [navigation]);
 
   const handleBack = useCallback(() => {
-    navigate(AppScreen.MAIN);
-  }, [navigate]);
+    navigation.dispatch(StackActions.popToTop());
+  }, [navigation]);
 
   useEffect(() => {
     const reload = () => void loadCustomers();

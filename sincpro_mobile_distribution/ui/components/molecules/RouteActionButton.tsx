@@ -1,6 +1,6 @@
 import { ERouteStatusType } from "@sincpro/mobile-distribution/domain/route";
-import { Form } from "@sincpro/mobile-ui";
-import React from "react";
+import { BottomInsetContext, Form } from "@sincpro/mobile-ui";
+import { useContext } from "react";
 import { View } from "react-native";
 
 type RouteActionButtonProps = {
@@ -14,6 +14,8 @@ export function RouteActionButton({
   onStartRoute,
   onFinishRoute,
 }: RouteActionButtonProps) {
+  const bottomInset = useContext(BottomInsetContext);
+
   if (!status || [ERouteStatusType.DONE, ERouteStatusType.DISTRIBUTED].includes(status)) {
     return null;
   }
@@ -21,7 +23,7 @@ export function RouteActionButton({
   const isConfirmed = status === ERouteStatusType.CONFIRMED;
 
   return (
-    <View className="p-4 mt-auto">
+    <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: bottomInset + 16 }}>
       <Form.Button
         onPress={isConfirmed ? onStartRoute : onFinishRoute}
         title={isConfirmed ? "Iniciar hoja de ruta" : "Finalizar hoja de ruta"}

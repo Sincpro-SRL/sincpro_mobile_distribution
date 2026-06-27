@@ -1,7 +1,7 @@
+import { useRoute } from "@react-navigation/native";
 import { Payment } from "@sincpro/mobile-distribution/domain/payment";
 import { paymentService } from "@sincpro/mobile-distribution/services/payment.service";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-native";
 
 interface IPaymentDetailContext {
   payment: Payment | null;
@@ -26,9 +26,9 @@ export function PaymentDetailProvider({
   initialPayment,
   onBack,
 }: PaymentDetailProviderProps) {
-  const location = useLocation();
-  const navigationPayment = location.state?.payment as Payment | undefined;
-  const navigationPaymentId = location.state?.paymentId as string | undefined;
+  const route = useRoute();
+  const navigationPayment = (route.params as any)?.payment as Payment | undefined;
+  const navigationPaymentId = (route.params as any)?.paymentId as string | undefined;
   const rawPayment = initialPayment ?? navigationPayment;
   const rawPaymentId = paymentId ?? navigationPaymentId;
 

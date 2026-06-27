@@ -1,3 +1,4 @@
+import { StackActions, useNavigation, useRoute } from "@react-navigation/native";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import type { IAuthorizedPerson } from "@sincpro/mobile-distribution/domain/customer/credit";
 import { EDocumentType } from "@sincpro/mobile-distribution/domain/electronic_invoice/document_type";
@@ -15,7 +16,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-native";
 
 export enum EPayOrderStep {
   PAYMENT_SETUP = "PAYMENT_SETUP",
@@ -57,18 +57,17 @@ interface PayOrderWizardProviderProps {
 }
 
 export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps) {
-  const navigate = useNavigate();
-  const params = useParams<{ id: string }>();
-  const location = useLocation();
+  const navigation = useNavigation();
+  const route = useRoute();
   const { show, hide } = useConfirmationContext();
-  const locationState = location.state as
-    | { order?: SaleOrder; documentType?: EDocumentType }
+  const routeParams = route.params as any as
+    | { order?: SaleOrder; documentType?: EDocumentType; id?: string }
     | undefined;
 
-  const [order, setOrder] = useState<SaleOrder | null>(locationState?.order || null);
+  const [order, setOrder] = useState<SaleOrder | null>(routeParams?.order || null);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [documentType, setDocumentType] = useState<EDocumentType>(
-    locationState?.documentType || EDocumentType.FACTURA_ELECTRONICA,
+    routeParams?.documentType || EDocumentType.FACTURA_ELECTRONICA,
   );
   const [selectedAuthorizedPerson, setSelectedAuthorizedPerson] =
     useState<IAuthorizedPerson>();
@@ -77,12 +76,12 @@ export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps
   const [hasError, setHasError] = useState(false);
 
   const fetchOrder = useCallback(async () => {
-    if (order || !params.id) return;
+    if (order || !routeParams?.id) return;
 
     setIsLoading(true);
     setHasError(false);
     try {
-      const fetchedOrder = await saleOrderService.getOrderById(params.id);
+      const fetchedOrder = await saleOrderService.getOrderById(routeParams.id);
       if (fetchedOrder) {
         setOrder(fetchedOrder);
       } else {
@@ -93,15 +92,15 @@ export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps
     } finally {
       setIsLoading(false);
     }
-  }, [order, params.id]);
+  }, [order, routeParams?.id]);
 
   useEffect(() => {
     fetchOrder();
   }, [fetchOrder]);
 
   useEffect(() => {
-    if (locationState?.order) {
-      saleOrderService.getOrderById(locationState.order.uuid).then((updatedOrder) => {
+    if (routeParams?.order) {
+      saleOrderService.getOrderById(routeParams.order.uuid).then((updatedOrder) => {
         if (updatedOrder) {
           setOrder(updatedOrder);
         }
@@ -179,12 +178,7 @@ export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps
         return;
       }
 
-      navigate(AppScreen.ORDER_RECEIPT, {
-        replace: true,
-        state: {
-          entity: invoice,
-        },
-      });
+      navigation.dispatch(StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: invoice }));
     } catch (error) {
       console.error("Error processing payment:", error);
 
@@ -203,10 +197,9 @@ export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps
           onConfirm: () => {
             hide();
             if (invoice) {
-              navigate(AppScreen.ORDER_RECEIPT, {
-                replace: true,
-                state: { entity: invoice },
-              });
+              navigation.dispatch(
+                StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: invoice }),
+              );
             }
           },
           onCancel: () => hide(),
@@ -223,10 +216,9 @@ export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps
           onConfirm: () => {
             hide();
             if (invoice) {
-              navigate(AppScreen.ORDER_RECEIPT, {
-                replace: true,
-                state: { entity: invoice },
-              });
+              navigation.dispatch(
+                StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: invoice }),
+              );
             }
           },
           onCancel: () => hide(),
@@ -242,7 +234,7 @@ export function PayOrderWizardProvider({ children }: PayOrderWizardProviderProps
     amountDiscount,
     isCreditPayment,
     documentType,
-    navigate,
+    navigation,
     show,
     hide,
   ]);

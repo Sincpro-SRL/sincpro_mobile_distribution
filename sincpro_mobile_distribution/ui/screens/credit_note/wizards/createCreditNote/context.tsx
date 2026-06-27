@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { RemoteEntityCollection } from "@sincpro/mobile/domain/entity";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import { CreditNote } from "@sincpro/mobile-distribution/domain/credit_note";
@@ -7,7 +8,6 @@ import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen
 import { creditNoteService } from "@sincpro/mobile-distribution/services/credit_note.service";
 import { useConfirmationContext } from "@sincpro/mobile-ui/Dialog/Confirmation.context";
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
-import { useNavigate } from "react-router-native";
 
 export enum ECreateCreditNoteStep {
   OVERVIEW = "OVERVIEW",
@@ -52,7 +52,7 @@ export function CreateCreditNoteWizardProvider({
   originalOrder,
   customer,
 }: CreateCreditNoteWizardProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
   const [selectedLines, setSelectedLines] = useState<SaleOrderLine[]>([]);
   const [currentEditingLine, setCurrentEditingLine] = useState<SaleOrderLine | null>(null);
@@ -147,10 +147,12 @@ export function CreateCreditNoteWizardProvider({
 
           const createdCreditNote = creditNotes.first();
 
-          navigate(AppScreen.CREDIT_NOTE_DETAIL, {
-            state: { creditNote: createdCreditNote, customer },
-            replace: true,
-          });
+          navigation.dispatch(
+            StackActions.replace(AppScreen.CREDIT_NOTE_DETAIL, {
+              creditNote: createdCreditNote,
+              customer,
+            }),
+          );
         } catch (error) {
           console.error("Error creating credit note:", error);
 
@@ -165,10 +167,9 @@ export function CreateCreditNoteWizardProvider({
               cancelText: "Cancelar",
               onConfirm: () => {
                 hide();
-                navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, {
-                  state: { customer },
-                  replace: true,
-                });
+                navigation.dispatch(
+                  StackActions.replace(AppScreen.CUSTOMER_ORDERS_DETAIL, { customer }),
+                );
               },
               onCancel: () => hide(),
             });
@@ -180,10 +181,9 @@ export function CreateCreditNoteWizardProvider({
               cancelText: "Cancelar",
               onConfirm: () => {
                 hide();
-                navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, {
-                  state: { customer },
-                  replace: true,
-                });
+                navigation.dispatch(
+                  StackActions.replace(AppScreen.CUSTOMER_ORDERS_DETAIL, { customer }),
+                );
               },
               onCancel: () => hide(),
             });
@@ -194,7 +194,7 @@ export function CreateCreditNoteWizardProvider({
       },
       onCancel: () => hide(),
     });
-  }, [selectedLines, originalOrder, customer, navigate, show, hide]);
+  }, [selectedLines, originalOrder, customer, navigation, show, hide]);
 
   const goToItemSelection = useCallback(
     (wizard: { goToStep: (step: ECreateCreditNoteStep) => void }) => {
@@ -219,8 +219,8 @@ export function CreateCreditNoteWizardProvider({
   );
 
   const handleBack = useCallback(() => {
-    navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, { state: { customer } });
-  }, [navigate, customer]);
+    (navigation as any).navigate(AppScreen.CUSTOMER_ORDERS_DETAIL, { customer });
+  }, [navigation, customer]);
 
   const value = useMemo<ICreateCreditNoteWizardContext>(
     () => ({

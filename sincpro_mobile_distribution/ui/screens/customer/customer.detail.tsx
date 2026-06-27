@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import { DomainEvent } from "@sincpro/mobile/domain/event_sourcing";
 import { useCommon } from "@sincpro/mobile/entrypoints/ui/common_provider";
 import { EventTimelineItem } from "@sincpro/mobile/ui/components/molecules";
@@ -20,7 +21,6 @@ import { Typography } from "@sincpro/mobile-ui/Typography";
 import ScreenHeader, { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { useLocation } from "react-router-native";
 
 import { CustomerDetailProvider, useCustomerDetail } from "./customer.detail.context";
 
@@ -225,8 +225,8 @@ function CustomerDetailContent() {
 }
 
 export function CustomerDetailScreen() {
-  const location = useLocation();
-  const customerUuid = location.state?.customer?.uuid as string | undefined;
+  const route = useRoute();
+  const customerUuid = (route.params as any)?.customer?.uuid as string | undefined;
 
   if (!customerUuid) {
     return (

@@ -17,6 +17,8 @@ async function syncConsecutives(): Promise<void> {
   loggerCronJobs.info("Finished syncing invoice & ticket consecutives");
 }
 
-const cronSyncConsecutives = new CronWorker("SYNC_CONSECUTIVES", syncConsecutives, 2, true);
+const cronSyncConsecutives = new CronWorker("SYNC_CONSECUTIVES", syncConsecutives, 2, {
+  requiresAuth: true,
+});
 
 export default cronSyncConsecutives;

@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import type { CreditNote } from "@sincpro/mobile-distribution/domain/credit_note";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import {
@@ -11,10 +12,8 @@ import {
 } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { Form } from "@sincpro/mobile-ui/Form";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useMemo } from "react";
 import { View } from "react-native";
-import { useLocation } from "react-router-native";
 
 import { CreditNoteDetailProvider, useCreditNoteDetail } from "./credit_note.detail.context";
 
@@ -149,7 +148,7 @@ function CreditNoteDetailContent() {
       onBack={handleBack}
       onRefresh={refreshCreditNote}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Groups>
@@ -178,9 +177,9 @@ export function CreditNoteDetailScreen({
   creditNote,
   customer,
 }: CreditNoteDetailScreenProps) {
-  const location = useLocation();
-  const creditNoteFromState = location.state?.creditNote as CreditNote | undefined;
-  const customerFromState = location.state?.customer as Customer | undefined;
+  const route = useRoute();
+  const creditNoteFromState = (route.params as any)?.creditNote as CreditNote | undefined;
+  const customerFromState = (route.params as any)?.customer as Customer | undefined;
 
   const resolvedCreditNote = creditNote ?? creditNoteFromState;
   const resolvedCustomer = customer ?? customerFromState ?? null;

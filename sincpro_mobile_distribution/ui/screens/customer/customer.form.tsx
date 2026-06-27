@@ -1,13 +1,13 @@
+import { useNavigation } from "@react-navigation/native";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
 import { CustomerFormTemplate } from "@sincpro/mobile-distribution/ui/components/templates";
 import { Form } from "@sincpro/mobile-ui";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-native";
 
 import { CustomerFormProvider, useCustomerForm } from "./customer.form.context";
 
 function CustomerFormScreenContent() {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { isSubmitting, legalEntityType, control, errors, submit, reset } = useCustomerForm();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function CustomerFormScreenContent() {
       errors={errors}
       isSubmitting={isSubmitting}
       legalEntityType={legalEntityType}
-      onBack={() => navigate(AppScreen.CUSTOMER_LIST)}
+      onBack={() => navigation.navigate(AppScreen.CUSTOMER_LIST as never)}
       title="Nuevo Cliente"
     >
       <CustomerFormTemplate.Footer>
@@ -37,10 +37,12 @@ function CustomerFormScreenContent() {
 }
 
 export function CustomerFormScreen() {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   return (
-    <CustomerFormProvider onCreate={() => navigate(AppScreen.CUSTOMER_LIST)}>
+    <CustomerFormProvider
+      onCreate={() => navigation.navigate(AppScreen.CUSTOMER_LIST as never)}
+    >
       <CustomerFormScreenContent />
     </CustomerFormProvider>
   );

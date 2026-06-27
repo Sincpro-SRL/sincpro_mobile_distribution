@@ -1,9 +1,9 @@
+import { StackActions, useNavigation, useRoute } from "@react-navigation/native";
 import { SaleOrder } from "@sincpro/mobile-distribution/domain/sale_order";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
 import { useConfirmationContext } from "@sincpro/mobile-ui/Dialog/Confirmation.context";
 import { Wizard } from "@sincpro/mobile-ui/views/Wizard";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-native";
 
 import { EUpdateOrderStep, UpdateOrderWizardProvider } from "./context";
 import { StepOverview } from "./step1.overview";
@@ -34,16 +34,15 @@ function UpdateOrderWizardContent() {
 }
 
 export function SaleOrderUpdateWizard() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const route = useRoute();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
 
-  const state = location.state as { order?: SaleOrder } | undefined;
-  const order = state?.order || null;
+  const order = ((route.params as any)?.order as SaleOrder) || null;
 
   useEffect(() => {
     if (!order) {
-      navigate(AppScreen.SALE_ORDER_LIST, { replace: true });
+      navigation.dispatch(StackActions.replace(AppScreen.SALE_ORDER_LIST));
       return;
     }
 
@@ -56,14 +55,13 @@ export function SaleOrderUpdateWizard() {
         confirmText: "Entendido",
         onConfirm: () => {
           hide();
-          navigate(AppScreen.SALE_ORDER_DETAIL, {
-            replace: true,
-            state: { saleOrder: order },
-          });
+          navigation.dispatch(
+            StackActions.replace(AppScreen.SALE_ORDER_DETAIL, { saleOrder: order }),
+          );
         },
       });
     }
-  }, [order, navigate, show, hide]);
+  }, [order, navigation, show, hide]);
 
   if (!order || !order.canBeUpdated()) {
     return null;

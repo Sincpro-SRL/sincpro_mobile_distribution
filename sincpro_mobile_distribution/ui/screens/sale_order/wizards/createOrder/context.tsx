@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { EProductStockFilter, Product } from "@sincpro/mobile-distribution/domain/product";
@@ -13,7 +14,6 @@ import { productService } from "@sincpro/mobile-distribution/services/product.se
 import { saleOrderService } from "@sincpro/mobile-distribution/services/sale_order.service";
 import { useConfirmationContext } from "@sincpro/mobile-ui/Dialog/Confirmation.context";
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
-import { useNavigate } from "react-router-native";
 
 export enum ECreateOrderStep {
   FORM_OVERVIEW = "FORM_OVERVIEW",
@@ -68,7 +68,7 @@ export function CreateOrderWizardProvider({
   initialCustomer = null,
   initialProduct = null,
 }: CreateOrderWizardProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
 
   const [order, setOrder] = useState<SaleOrder>(() => SaleOrder.obj({}));
@@ -281,9 +281,7 @@ export function CreateOrderWizardProvider({
         customer ?? undefined,
       );
       setOrder(createdOrder);
-      navigate(AppScreen.SALE_ORDER_PAYMENT, {
-        state: { order: createdOrder },
-      });
+      (navigation as any).navigate(AppScreen.SALE_ORDER_PAYMENT, { order: createdOrder });
     } catch (error) {
       console.error("Error creating sale order:", error);
 
@@ -300,8 +298,8 @@ export function CreateOrderWizardProvider({
             hide();
             const localOrder = await saleOrderService.getOrderById(order.uuid);
             if (localOrder) {
-              navigate(AppScreen.SALE_ORDER_PAYMENT, {
-                state: { order: localOrder },
+              (navigation as any).navigate(AppScreen.SALE_ORDER_PAYMENT, {
+                order: localOrder,
               });
             }
           },
@@ -317,8 +315,8 @@ export function CreateOrderWizardProvider({
             hide();
             const localOrder = await saleOrderService.getOrderById(order.uuid);
             if (localOrder) {
-              navigate(AppScreen.SALE_ORDER_PAYMENT, {
-                state: { order: localOrder },
+              (navigation as any).navigate(AppScreen.SALE_ORDER_PAYMENT, {
+                order: localOrder,
               });
             }
           },
@@ -328,7 +326,7 @@ export function CreateOrderWizardProvider({
     } finally {
       setIsLoading(false);
     }
-  }, [order, customer, navigate, show, hide]);
+  }, [order, customer, navigation, show, hide]);
 
   const handleSaveAsQuote = useCallback((): void => {
     show({
@@ -344,7 +342,7 @@ export function CreateOrderWizardProvider({
             customer ?? undefined,
           );
           setOrder(createdOrder);
-          navigate(AppScreen.SALE_ORDER_LIST, { replace: true });
+          navigation.dispatch(StackActions.replace(AppScreen.SALE_ORDER_LIST));
         } catch (error) {
           console.error("Error creating quotation:", error);
 
@@ -359,7 +357,7 @@ export function CreateOrderWizardProvider({
               cancelText: "Cancelar",
               onConfirm: () => {
                 hide();
-                navigate(AppScreen.SALE_ORDER_LIST, { replace: true });
+                navigation.dispatch(StackActions.replace(AppScreen.SALE_ORDER_LIST));
               },
               onCancel: () => hide(),
             });
@@ -371,7 +369,7 @@ export function CreateOrderWizardProvider({
               cancelText: "Cancelar",
               onConfirm: () => {
                 hide();
-                navigate(AppScreen.SALE_ORDER_LIST, { replace: true });
+                navigation.dispatch(StackActions.replace(AppScreen.SALE_ORDER_LIST));
               },
               onCancel: () => hide(),
             });
@@ -382,7 +380,7 @@ export function CreateOrderWizardProvider({
       },
       onCancel: () => hide(),
     });
-  }, [order, customer, show, hide, navigate]);
+  }, [order, customer, show, hide, navigation]);
 
   const handleBackToOverview = useCallback((): void => {
     setSelectedProduct(null);
@@ -393,7 +391,7 @@ export function CreateOrderWizardProvider({
     const hasData = order.orderLines.length > 0 || customer !== null;
 
     if (!hasData) {
-      navigate(-1);
+      navigation.goBack();
       return;
     }
 
@@ -404,11 +402,11 @@ export function CreateOrderWizardProvider({
       cancelText: "Cancelar",
       onConfirm: () => {
         hide();
-        navigate(-1);
+        navigation.goBack();
       },
       onCancel: () => hide(),
     });
-  }, [order.orderLines.length, customer, show, hide, navigate]);
+  }, [order.orderLines.length, customer, show, hide, navigation]);
 
   const value: ICreateOrderWizardContext = useMemo(
     () => ({

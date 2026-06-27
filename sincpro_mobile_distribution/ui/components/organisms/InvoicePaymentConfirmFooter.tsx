@@ -1,6 +1,5 @@
 import { Display } from "@sincpro/mobile-ui/Display";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { ReactNode } from "react";
 import { View } from "react-native";

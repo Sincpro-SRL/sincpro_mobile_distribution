@@ -3,7 +3,6 @@ import type {
   CreditNoteLine,
 } from "@sincpro/mobile-distribution/domain/credit_note";
 import { Display } from "@sincpro/mobile-ui";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn, tv } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { View } from "react-native";

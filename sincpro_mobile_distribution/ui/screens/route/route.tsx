@@ -3,7 +3,6 @@ import { RouteCard } from "@sincpro/mobile-distribution/ui/components/organisms"
 import { Form } from "@sincpro/mobile-ui/Form";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useEffect } from "react";
 import { View } from "react-native";
 
@@ -62,7 +61,7 @@ function RouteScreenComponent() {
     >
       <FormViewV2.Header
         logoSource={require("../../../../assets/DISTRIBUTION/logo.png")}
-        variant={EVariantScreenHeader.LOGO_WITH_BACK_BUTTON}
+        variant="default"
       />
 
       <FormViewV2.Content>

@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { loggerUseCases } from "@sincpro/mobile/infrastructure/logger";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { EProductStockFilter, Product } from "@sincpro/mobile-distribution/domain/product";
@@ -16,7 +17,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 export enum EUpdateOrderStep {
   FORM_OVERVIEW = "FORM_OVERVIEW",
@@ -85,7 +85,7 @@ export function UpdateOrderWizardProvider({
   children,
   initialOrder,
 }: UpdateOrderWizardProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
 
   const [order, setOrder] = useState<SaleOrder>(initialOrder);
@@ -340,10 +340,9 @@ export function UpdateOrderWizardProvider({
         setIsLoading(true);
         try {
           await saleOrderService.updateOrder(order);
-          navigate(AppScreen.SALE_ORDER_DETAIL, {
-            replace: true,
-            state: { saleOrder: order },
-          });
+          navigation.dispatch(
+            StackActions.replace(AppScreen.SALE_ORDER_DETAIL, { saleOrder: order }),
+          );
         } catch (error) {
           loggerUseCases.error("Error saving order:", error);
           show({
@@ -358,7 +357,7 @@ export function UpdateOrderWizardProvider({
       },
       onCancel: () => hide(),
     });
-  }, [order, navigate, show, hide]);
+  }, [order, navigation, show, hide]);
 
   const cancelChanges = useCallback(() => {
     show({
@@ -368,14 +367,13 @@ export function UpdateOrderWizardProvider({
       cancelText: "Continuar editando",
       onConfirm: () => {
         hide();
-        navigate(AppScreen.SALE_ORDER_DETAIL, {
-          replace: true,
-          state: { saleOrder: initialOrder },
-        });
+        navigation.dispatch(
+          StackActions.replace(AppScreen.SALE_ORDER_DETAIL, { saleOrder: initialOrder }),
+        );
       },
       onCancel: () => hide(),
     });
-  }, [initialOrder, navigate, show, hide]);
+  }, [initialOrder, navigation, show, hide]);
 
   const startAddingProduct = useCallback((product: Product) => {
     setSelectedProduct(product);

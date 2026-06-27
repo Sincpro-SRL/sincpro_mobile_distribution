@@ -1,7 +1,7 @@
+import { useRoute } from "@react-navigation/native";
 import { Product } from "@sincpro/mobile-distribution/domain/product";
 import { ProductActionFooter } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { ProductDetailTemplate } from "@sincpro/mobile-distribution/ui/components/templates";
-import { useLocation } from "react-router-native";
 
 import { ProductDetailProvider, useProductDetail } from "./product.detail.context";
 
@@ -55,8 +55,8 @@ function ProductDetailScreenContent() {
 }
 
 export function ProductDetailScreen() {
-  const location = useLocation();
-  const navigationProduct = location.state?.product;
+  const route = useRoute();
+  const navigationProduct = (route.params as any)?.product;
   const productFromProps = navigationProduct
     ? Product.fromJSON(navigationProduct)
     : undefined;

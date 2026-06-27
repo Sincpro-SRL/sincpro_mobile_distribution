@@ -1,7 +1,6 @@
 import type { Payment } from "@sincpro/mobile-distribution/domain/payment";
 import { Display } from "@sincpro/mobile-ui/Display";
 import WalletMoneyIcon from "@sincpro/mobile-ui/icons/WalletMoneyIcon";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { TouchableOpacity, View } from "react-native";
