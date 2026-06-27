@@ -7,11 +7,9 @@ import {
   SaleOrderPaymentActions,
 } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
 import type { WizardContextValue } from "@sincpro/mobile-ui/views/Wizard";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
@@ -139,7 +137,7 @@ export function StepOverview({ wizard }: StepOverviewProps) {
       name="Nueva Nota de Crédito"
       onBack={handleBack}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Groups>

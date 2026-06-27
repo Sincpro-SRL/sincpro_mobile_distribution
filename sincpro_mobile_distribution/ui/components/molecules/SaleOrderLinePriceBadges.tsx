@@ -1,5 +1,4 @@
-import { Typography } from "@sincpro/mobile-ui/Typography";
-import { View } from "react-native";
+import { Display } from "@sincpro/mobile-ui";
 
 interface SaleOrderLinePriceBadgesProps {
   isManualPrice?: boolean;
@@ -17,25 +16,16 @@ export function SaleOrderLinePriceBadges({
   return (
     <>
       {showDiscount && (
-        <View className="bg-success-100 px-1.5 py-0.5 rounded-md">
-          <Typography.Text className="text-success-800" variant="captionSmall">
-            -{discountPercent!.toFixed(discountPercent! >= 10 ? 0 : 1)}%
-          </Typography.Text>
-        </View>
+        <Display.Badge
+          label={`-${discountPercent!.toFixed(discountPercent! >= 10 ? 0 : 1)}%`}
+          variant={Display.BadgeVariants.SUCCESS}
+        />
       )}
       {isManualPrice && (
-        <View className="bg-warning-100 px-1.5 py-0.5 rounded-md">
-          <Typography.Text className="text-warning-800" variant="captionSmall">
-            Editado
-          </Typography.Text>
-        </View>
+        <Display.Badge label="Editado" variant={Display.BadgeVariants.WARNING} />
       )}
       {priceListName && !isManualPrice && (
-        <View className="bg-bg-muted px-1.5 py-0.5 rounded-md">
-          <Typography.Text className="text-text-secondary" variant="captionSmall">
-            {priceListName}
-          </Typography.Text>
-        </View>
+        <Display.Badge label={priceListName} variant={Display.BadgeVariants.INFO} />
       )}
     </>
   );

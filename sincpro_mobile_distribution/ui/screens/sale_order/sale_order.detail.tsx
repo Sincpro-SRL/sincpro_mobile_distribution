@@ -1,11 +1,10 @@
+import { useRoute } from "@react-navigation/native";
 import { SaleOrder } from "@sincpro/mobile-distribution/domain/sale_order";
 import {
   SaleOrderDetailContent,
   SaleOrderDetailFooter,
 } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
-import { useLocation } from "react-router-native";
 
 import { SaleOrderDetailProvider, useSaleOrderDetail } from "./sale_order.detail.context";
 
@@ -36,7 +35,7 @@ function SaleOrderDetailScreenComponent() {
       onBack={handleBack}
       onRefresh={refreshSaleOrder}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Groups>
@@ -75,8 +74,8 @@ interface SaleOrderDetailScreenProps {
 }
 
 export function SaleOrderDetailScreen(props: SaleOrderDetailScreenProps) {
-  const location = useLocation();
-  const navigationSaleOrder = location.state?.saleOrder;
+  const route = useRoute();
+  const navigationSaleOrder = (route.params as any)?.saleOrder;
   const rawSaleOrder = props.saleOrder ?? navigationSaleOrder;
 
   const saleOrderFromProps = rawSaleOrder

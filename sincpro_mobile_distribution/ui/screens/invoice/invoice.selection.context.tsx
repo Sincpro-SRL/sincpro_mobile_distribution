@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { Invoice } from "@sincpro/mobile-distribution/domain/invoice";
@@ -13,7 +14,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 export enum EInvoiceFilter {
   NOT_PAID = "NOT_PAID",
@@ -132,18 +132,18 @@ export function InvoiceSelectionProvider({
     setCurrentFilter(EInvoiceFilter.NOT_PAID);
   }, []);
 
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const handleSelectInvoice = useCallback(
     (invoice: Invoice) => {
-      navigate(AppScreen.INVOICE_PAYMENT, { state: { invoice, customer } });
+      (navigation as any).navigate(AppScreen.INVOICE_PAYMENT, { invoice, customer });
     },
-    [navigate, customer],
+    [navigation, customer],
   );
 
   const handleBack = useCallback(() => {
-    navigate(AppScreen.INVOICE_LIST);
-  }, [navigate]);
+    navigation.navigate(AppScreen.INVOICE_LIST as never);
+  }, [navigation]);
 
   useEffect(() => {
     const reload = () => void loadInvoices();

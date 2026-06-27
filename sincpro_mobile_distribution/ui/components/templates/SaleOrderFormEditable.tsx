@@ -8,7 +8,6 @@ import {
 } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { SaleOrderLineList } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { ReactNode } from "react";
 
 export interface ISaleOrderAllowedOperations {
@@ -65,7 +64,7 @@ export function SaleOrderFormEditable({
       name={title}
       onBack={onBack}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Group>

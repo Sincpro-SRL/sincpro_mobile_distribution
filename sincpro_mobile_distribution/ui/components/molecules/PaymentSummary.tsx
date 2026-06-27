@@ -1,5 +1,4 @@
 import { Display } from "@sincpro/mobile-ui/Display";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { createContext, ReactNode, useContext } from "react";

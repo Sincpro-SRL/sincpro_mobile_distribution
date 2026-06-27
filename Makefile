@@ -49,7 +49,10 @@ format:
 	@npx prettier --experimental --write "**/*.{ts,tsx,js,jsx,json}" --ignore-path .gitignore
 	@$(MAKE) typecheck
 
-verify-format: format
+doctor:
+	@bash scripts/doctor.sh
+
+verify-format: format doctor
 	@if ! git diff --quiet; then \
 	  echo >&2 "✘ El formateo ha modificado archivos. Por favor agrégalos al commit."; \
 	  git --no-pager diff --name-only HEAD -- >&2; \

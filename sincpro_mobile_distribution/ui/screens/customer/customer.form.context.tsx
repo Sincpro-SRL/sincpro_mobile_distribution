@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import {
   Customer,
@@ -17,7 +18,6 @@ import React, {
   useState,
 } from "react";
 import { Control, FieldErrors, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-native";
 
 export interface CustomerFormValues {
   vat: string;
@@ -52,7 +52,7 @@ export function CustomerFormProvider({
   initialCustomer?: Customer;
   onCreate?: (customer: Customer) => void;
 }) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -122,7 +122,7 @@ export function CustomerFormProvider({
         if (onCreate) {
           onCreate(created);
         } else {
-          navigate(AppScreen.CUSTOMER_LIST);
+          navigation.navigate(AppScreen.CUSTOMER_LIST as never);
         }
 
         setIsSubmitting(false);
@@ -157,7 +157,7 @@ export function CustomerFormProvider({
               if (onCreate) {
                 onCreate(customerForCallback);
               } else {
-                navigate(AppScreen.CUSTOMER_LIST);
+                navigation.navigate(AppScreen.CUSTOMER_LIST as never);
               }
             },
             onCancel: () => hide(),
@@ -186,7 +186,7 @@ export function CustomerFormProvider({
                 });
                 onCreate(customerForCallback);
               } else {
-                navigate(AppScreen.CUSTOMER_LIST);
+                navigation.navigate(AppScreen.CUSTOMER_LIST as never);
               }
             },
             onCancel: () => hide(),
@@ -194,7 +194,7 @@ export function CustomerFormProvider({
         }
       }
     },
-    [legalEntityType, onCreate, navigate, show, hide],
+    [legalEntityType, onCreate, navigation, show, hide],
   );
 
   const resetForm = useCallback(() => {

@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import {
   CreditNoteRow,
@@ -6,13 +7,10 @@ import {
 } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { Display } from "@sincpro/mobile-ui/Display";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useEffect, useMemo } from "react";
 import { View } from "react-native";
-import { useLocation } from "react-router-native";
 
 import {
   CustomerOrdersDetailProvider,
@@ -142,7 +140,7 @@ function CustomerOrdersDetailContent() {
       onBack={handleBack}
       onRefresh={refreshFromBackend}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER}>
+      <FormViewV2.Header variant="default">
         <FormViewV2.Header.ActionsBar>
           <Form.Button
             className="flex-1"
@@ -181,8 +179,8 @@ interface CustomerOrdersDetailScreenProps {
 }
 
 export function CustomerOrdersDetailScreen({ customer }: CustomerOrdersDetailScreenProps) {
-  const location = useLocation();
-  const customerFromState = location.state?.customer as Customer | undefined;
+  const route = useRoute();
+  const customerFromState = (route.params as any)?.customer as Customer | undefined;
   const resolvedCustomer = customer ?? customerFromState;
 
   if (!resolvedCustomer) {

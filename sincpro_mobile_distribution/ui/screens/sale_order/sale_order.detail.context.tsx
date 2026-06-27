@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { InvoiceReadyToReconcileEvent } from "@sincpro/mobile-distribution/domain/invoice/events";
 import { SaleOrder, SaleOrderInvoice } from "@sincpro/mobile-distribution/domain/sale_order";
@@ -18,7 +19,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface ISaleOrderDetailContext {
   selectedSaleOrder: SaleOrder | null;
@@ -54,7 +54,7 @@ export function SaleOrderDetailProvider({
   initialSaleOrder,
   onBack,
 }: SaleOrderDetailProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const [selectedSaleOrder, setSelectedSaleOrder] = useState<SaleOrder | null>(
     initialSaleOrder ?? null,
   );
@@ -108,23 +108,22 @@ export function SaleOrderDetailProvider({
     if (onBack) {
       onBack();
     } else {
-      navigate(-1);
+      navigation.goBack();
     }
-  }, [navigate, onBack]);
+  }, [navigation, onBack]);
 
   const handlePay = useCallback(() => {
     if (!selectedSaleOrder) return;
-    navigate(AppScreen.SALE_ORDER_PAYMENT, {
-      state: { order: selectedSaleOrder },
-    });
-  }, [navigate, selectedSaleOrder]);
+    (navigation as any).navigate(AppScreen.SALE_ORDER_PAYMENT, { order: selectedSaleOrder });
+  }, [navigation, selectedSaleOrder]);
 
   const handleSelectInvoice = useCallback(() => {
     if (!selectedSaleOrder) return;
-    navigate(AppScreen.SALE_ORDER_PAYMENT, {
-      state: { order: selectedSaleOrder, selectInvoice: true },
+    (navigation as any).navigate(AppScreen.SALE_ORDER_PAYMENT, {
+      order: selectedSaleOrder,
+      selectInvoice: true,
     });
-  }, [navigate, selectedSaleOrder]);
+  }, [navigation, selectedSaleOrder]);
 
   const handleViewReceipt = useCallback(async () => {
     if (!selectedSaleOrder) return;
@@ -134,21 +133,17 @@ export function SaleOrderDetailProvider({
     const invoice = await invoiceService.getInvoiceByRemoteId(saleOrderInvoice.remoteId);
     if (!invoice) return;
 
-    navigate(AppScreen.ORDER_RECEIPT, {
-      state: { entity: invoice },
-    });
-  }, [navigate, selectedSaleOrder]);
+    (navigation as any).navigate(AppScreen.ORDER_RECEIPT, { entity: invoice });
+  }, [navigation, selectedSaleOrder]);
 
   const handleViewInvoice = useCallback(
     async (saleOrderInvoice: SaleOrderInvoice): Promise<void> => {
       const invoice = await invoiceService.getInvoiceByRemoteId(saleOrderInvoice.remoteId!);
       if (!invoice) return;
 
-      navigate(AppScreen.INVOICE_PAYMENT, {
-        state: { invoice: invoice.asJSON() },
-      });
+      (navigation as any).navigate(AppScreen.INVOICE_PAYMENT, { invoice: invoice.asJSON() });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleViewReceiptFromInvoice = useCallback(
@@ -156,11 +151,9 @@ export function SaleOrderDetailProvider({
       const invoice = await invoiceService.getInvoiceByRemoteId(saleOrderInvoice.remoteId!);
       if (!invoice) return;
 
-      navigate(AppScreen.ORDER_RECEIPT, {
-        state: { entity: invoice },
-      });
+      (navigation as any).navigate(AppScreen.ORDER_RECEIPT, { entity: invoice });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleDeliver = useCallback(async () => {
@@ -171,20 +164,16 @@ export function SaleOrderDetailProvider({
       if (saleOrderInvoice?.remoteId) {
         const invoice = await invoiceService.getInvoiceByRemoteId(saleOrderInvoice.remoteId);
         if (invoice) {
-          navigate(AppScreen.ORDER_RECEIPT, {
-            state: { entity: invoice },
-          });
+          (navigation as any).navigate(AppScreen.ORDER_RECEIPT, { entity: invoice });
         }
       }
     }
-  }, [navigate, selectedSaleOrder]);
+  }, [navigation, selectedSaleOrder]);
 
   const handleEdit = useCallback(() => {
     if (!selectedSaleOrder) return;
-    navigate(AppScreen.SALE_ORDER_UPDATE, {
-      state: { order: selectedSaleOrder },
-    });
-  }, [navigate, selectedSaleOrder]);
+    (navigation as any).navigate(AppScreen.SALE_ORDER_UPDATE, { order: selectedSaleOrder });
+  }, [navigation, selectedSaleOrder]);
 
   const handleConfirmQuotation = useCallback(async () => {
     if (!selectedSaleOrder) return;

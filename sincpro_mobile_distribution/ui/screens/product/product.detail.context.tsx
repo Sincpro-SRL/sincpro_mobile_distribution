@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { Product } from "@sincpro/mobile-distribution/domain/product";
 import { PriceListID } from "@sincpro/mobile-distribution/domain/product/price_list";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
@@ -10,7 +11,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface IProductDetailContext {
   product: Product | null;
@@ -135,31 +135,29 @@ export function ProductDetailProvider({
     }
   }, [product, quantity, price, editingLineId, onSubmit, isBlocked]);
 
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    navigation.goBack();
+  }, [navigation]);
 
   const handleSubmitAndNavigate = useCallback(() => {
     if (!product || isBlocked) return;
     handleSubmit();
-    navigate(AppScreen.SALE_ORDER_CREATE, {
-      state: {
-        orderLine: {
-          productId: product.remoteId,
-          name: product.name,
-          code: product.code,
-          quantity,
-          price,
-          originalPrice: basePrice,
-          description: product.description,
-          uomId: product.uomId,
-          uomName: product.uomName,
-        },
+    (navigation as any).navigate(AppScreen.SALE_ORDER_CREATE, {
+      orderLine: {
+        productId: product.remoteId,
+        name: product.name,
+        code: product.code,
+        quantity,
+        price,
+        originalPrice: basePrice,
+        description: product.description,
+        uomId: product.uomId,
+        uomName: product.uomName,
       },
     });
-  }, [product, isBlocked, handleSubmit, navigate, quantity, price, basePrice]);
+  }, [product, isBlocked, handleSubmit, navigation, quantity, price, basePrice]);
 
   const value = useMemo<IProductDetailContext>(
     () => ({

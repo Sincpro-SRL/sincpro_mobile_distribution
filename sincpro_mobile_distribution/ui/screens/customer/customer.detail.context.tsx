@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
 import { customerService } from "@sincpro/mobile-distribution/services/customer.service";
@@ -9,7 +10,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface ICustomerDetailContext {
   customer: Customer | null;
@@ -31,7 +31,7 @@ export function CustomerDetailProvider({
   children,
   customerUuid,
 }: CustomerDetailProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,13 +50,13 @@ export function CustomerDetailProvider({
   }, []);
 
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    navigation.goBack();
+  }, [navigation]);
 
   const handleCreateOrder = useCallback(() => {
     if (!customer) return;
-    navigate(AppScreen.SALE_ORDER_CREATE, { state: { customer } });
-  }, [navigate, customer]);
+    (navigation as any).navigate(AppScreen.SALE_ORDER_CREATE, { customer });
+  }, [navigation, customer]);
 
   useEffect(() => {
     if (customerUuid) {

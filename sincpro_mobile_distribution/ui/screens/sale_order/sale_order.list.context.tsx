@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { InvoiceReadyToReconcileEvent } from "@sincpro/mobile-distribution/domain/invoice/events";
 import { RouteOrderCreatedFromRemoteEvent } from "@sincpro/mobile-distribution/domain/route/events";
@@ -18,7 +19,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 export type SaleOrderFilterType =
   | "all"
@@ -60,7 +60,7 @@ export function SaleOrderListProvider({
   onBack,
   onCreateSaleOrder,
 }: SaleOrderListProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { activeRoute: activeRouteId } = useDistributionGlobal();
   const [allSaleOrders, setAllSaleOrders] = useState<SaleOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -151,29 +151,27 @@ export function SaleOrderListProvider({
       if (onSelectSaleOrder) {
         onSelectSaleOrder(saleOrder);
       } else {
-        navigate(AppScreen.SALE_ORDER_DETAIL, {
-          state: { saleOrder },
-        });
+        (navigation as any).navigate(AppScreen.SALE_ORDER_DETAIL, { saleOrder });
       }
     },
-    [navigate, onSelectSaleOrder],
+    [navigation, onSelectSaleOrder],
   );
 
   const handleCreateSaleOrder = useCallback(() => {
     if (onCreateSaleOrder) {
       onCreateSaleOrder();
     } else {
-      navigate(AppScreen.SALE_ORDER_CREATE);
+      navigation.navigate(AppScreen.SALE_ORDER_CREATE as never);
     }
-  }, [navigate, onCreateSaleOrder]);
+  }, [navigation, onCreateSaleOrder]);
 
   const handleBack = useCallback(() => {
     if (onBack) {
       onBack();
     } else {
-      navigate(-1);
+      navigation.goBack();
     }
-  }, [navigate, onBack]);
+  }, [navigation, onBack]);
 
   useEffect(() => {
     const reload = () => void loadSaleOrders();

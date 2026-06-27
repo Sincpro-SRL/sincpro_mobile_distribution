@@ -1,3 +1,4 @@
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import { CreditNote } from "@sincpro/mobile-distribution/domain/credit_note";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
@@ -6,7 +7,6 @@ import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen
 import { creditNoteService } from "@sincpro/mobile-distribution/services/credit_note.service";
 import { useConfirmationContext } from "@sincpro/mobile-ui/Dialog/Confirmation.context";
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
-import { useNavigate } from "react-router-native";
 
 export enum EPayCreditNoteStep {
   PAYMENT_SETUP = "PAYMENT_SETUP",
@@ -54,7 +54,7 @@ export function PayCreditNoteWizardProvider({
   customer,
   initialPayments = [],
 }: PayCreditNoteWizardProviderProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { show, hide } = useConfirmationContext();
   const [payments, setPayments] = useState<Payment[]>(initialPayments);
   const [paymentMode, setPaymentMode] = useState<EPaymentMode>(EPaymentMode.SINGLE);
@@ -85,7 +85,7 @@ export function PayCreditNoteWizardProvider({
     setIsLoading(true);
     try {
       await creditNoteService.payCreditNote(creditNote.uuid, payments);
-      navigate(AppScreen.PAYMENT_HISTORY, { replace: true });
+      navigation.dispatch(StackActions.replace(AppScreen.PAYMENT_HISTORY));
     } catch (error) {
       console.error("Error processing credit note payment:", error);
 
@@ -100,7 +100,7 @@ export function PayCreditNoteWizardProvider({
           cancelText: "Cancelar",
           onConfirm: () => {
             hide();
-            navigate(AppScreen.PAYMENT_HISTORY, { replace: true });
+            navigation.dispatch(StackActions.replace(AppScreen.PAYMENT_HISTORY));
           },
           onCancel: () => hide(),
         });
@@ -112,7 +112,7 @@ export function PayCreditNoteWizardProvider({
           cancelText: "Cancelar",
           onConfirm: () => {
             hide();
-            navigate(AppScreen.PAYMENT_HISTORY, { replace: true });
+            navigation.dispatch(StackActions.replace(AppScreen.PAYMENT_HISTORY));
           },
           onCancel: () => hide(),
         });
@@ -120,11 +120,11 @@ export function PayCreditNoteWizardProvider({
     } finally {
       setIsLoading(false);
     }
-  }, [creditNote.uuid, payments, navigate, show, hide]);
+  }, [creditNote.uuid, payments, navigation, show, hide]);
 
   const handleBackToOverview = useCallback((): void => {
-    navigate(-1);
-  }, [navigate]);
+    navigation.goBack();
+  }, [navigation]);
 
   const goToMultiplePayments = useCallback(
     (wizard: { goToStep: (step: EPayCreditNoteStep) => void }): void => {

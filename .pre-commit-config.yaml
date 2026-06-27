@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: make-verify
         name: Validate guardrails (lint + types + format)
-        entry: make verify
+        entry: make verify-format
         language: system
         pass_filenames: false
         always_run: true

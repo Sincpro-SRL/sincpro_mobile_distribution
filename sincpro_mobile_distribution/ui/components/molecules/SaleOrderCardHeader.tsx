@@ -6,7 +6,6 @@ import {
 } from "@sincpro/mobile-distribution/ui/components/atoms";
 import { OpenMapButton } from "@sincpro/mobile-distribution/ui/components/molecules/OpenMapButton";
 import { BadgeVariants, Display } from "@sincpro/mobile-ui/Display";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { createContext, ReactNode, useContext } from "react";

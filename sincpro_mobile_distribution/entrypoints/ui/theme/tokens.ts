@@ -1,108 +1,182 @@
 import type { ThemeTokens } from "@sincpro/mobile-ui/theme/types";
 
-/**
- * ============================================================================
- * DISTRIBUTION DOMAIN - THEME TOKENS
- * ============================================================================
- *
- * Tema claro para el dominio de Distribución.
- * Sistema simplificado y semántico.
- */
-
 export const DISTRIBUTION_THEME: ThemeTokens = {
   name: "distribution",
 
-  // Colores primarios (Tailwind palette - más sofisticados)
-  primary: "#2563EB", // Tailwind blue-600 - color principal
-  secondary: "#6B7280", // Tailwind gray-500 - botones secundarios, bajo perfil
-  accent: "#F97316", // Tailwind orange-500 - color de acento, highlights
+  primary: "#2563EB",
+  secondary: "#6B7280",
+  accent: "#F97316",
 
-  // Fondos (Tailwind gray scale)
   bg: {
-    page: "#F9FAFB", // Tailwind gray-50
-    card: "#FFFFFF", // Blanco puro
-    popover: "#FFFFFF", // Dropdowns, tooltips
-    muted: "#F3F4F6", // Tailwind gray-100
-    accent: "#DBEAFE", // Tailwind blue-100
-    hover: "#F3F4F6", // Tailwind gray-100
-    disabled: "#F9FAFB", // Tailwind gray-50
+    page: "#F8FAFC", // slate-50 — casi blanco, sin tinte azul visible
+    card: "#FFFFFF",
+    popover: "#FFFFFF",
+    muted: "#F1F5F9", // slate-100
+    accent: "#DBEAFE", // blue-100
+    hover: "#E0EFFE",
+    disabled: "#F8FAFC",
   },
 
-  // Textos (Tailwind gray scale)
   text: {
-    primary: "#111827", // Tailwind gray-900
-    secondary: "#6B7280", // Tailwind gray-500
-    tertiary: "#9CA3AF", // Tailwind gray-400
-    muted: "#6B7280", // Tailwind gray-500
-    accent: "#1E40AF", // Tailwind blue-800
-    inverse: "#FFFFFF", // Blanco
-    disabled: "#D1D5DB", // Tailwind gray-300
-    onPrimary: "#FFFFFF", // Texto sobre primary (azul)
-    onSecondary: "#FFFFFF", // Texto sobre secondary (gris)
-    onAccent: "#FFFFFF", // Texto sobre accent (naranja)
-    onDanger: "#FFFFFF", // Texto sobre danger
-    onSuccess: "#FFFFFF", // Texto sobre success
+    primary: "#0F172A", // slate-900
+    secondary: "#475569", // slate-600
+    tertiary: "#94A3B8", // slate-400
+    muted: "#64748B", // slate-500
+    accent: "#1E40AF", // blue-800
+    inverse: "#FFFFFF",
+    disabled: "#CBD5E1", // slate-300
+    onPrimary: "#FFFFFF",
+    onSecondary: "#FFFFFF",
+    onAccent: "#FFFFFF",
+    onDanger: "#FFFFFF",
+    onSuccess: "#FFFFFF",
   },
-  // Iconos (Tailwind gray scale)
+
   icon: {
-    primary: "#111827", // Tailwind gray-900
-    secondary: "#6B7280", // Tailwind gray-500
-    tertiary: "#9CA3AF", // Tailwind gray-400
-    inverse: "#FFFFFF", // Blanco
-    disabled: "#D1D5DB", // Tailwind gray-300
+    primary: "#0F172A",
+    secondary: "#475569",
+    tertiary: "#94A3B8",
+    inverse: "#FFFFFF",
+    disabled: "#CBD5E1",
   },
-  // Bordes (Tailwind gray scale)
+
   border: {
-    default: "#E5E7EB", // Tailwind gray-200
-    light: "#F3F4F6", // Tailwind gray-100
-    strong: "#D1D5DB", // Tailwind gray-300
-    focus: "#2563EB", // Tailwind blue-600
+    default: "#BFDBFE", // blue-200 — bordes con identidad
+    light: "#DBEAFE", // blue-100
+    strong: "#93C5FD", // blue-300
+    focus: "#2563EB",
   },
 
-  // Estados semánticos (Tailwind palette)
-  success: "#10B981", // Tailwind emerald-500
-  warning: "#F97316", // Tailwind orange-500
-  danger: "#EF4444", // Tailwind red-500
-  info: "#2563EB", // Tailwind blue-600
+  success: "#10B981",
+  warning: "#F97316",
+  danger: "#EF4444",
+  info: "#2563EB",
 
-  // Estados semánticos - Versiones claras (Tailwind *-100)
-  successLight: "#D1FAE5", // Tailwind emerald-100
-  warningLight: "#FFEDD5", // Tailwind orange-100
-  dangerLight: "#FEE2E2", // Tailwind red-100
-  infoLight: "#DBEAFE", // Tailwind blue-100
+  successLight: "#D1FAE5",
+  warningLight: "#FFEDD5",
+  dangerLight: "#FEE2E2",
+  infoLight: "#DBEAFE",
 
-  // Focus & Input
-  ring: "#2563EB", // Tailwind blue-600
-  input: "#E5E7EB", // Tailwind gray-200
+  ring: "#2563EB",
+  input: "#BFDBFE",
 
-  // Gradientes (basados en Tailwind)
   gradient: {
-    primary: ["#3B82F6", "#1D4ED8"], // blue-500 → blue-700
-    accent: ["#FB923C", "#EA580C"], // orange-400 → orange-600 (accent)
+    primary: ["#3B82F6", "#1D4ED8"],
+    accent: ["#FB923C", "#EA580C"],
   },
 
-  // Sombras (React Native)
   shadow: {
     sm: {
-      shadowColor: "#000000",
+      shadowColor: "#1E40AF",
       shadowOffset: { width: 0, height: 1 },
-      shadowOpacity: 0.05,
+      shadowOpacity: 0.08,
       shadowRadius: 2,
       elevation: 1,
     },
     md: {
-      shadowColor: "#000000",
+      shadowColor: "#1E40AF",
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.1,
+      shadowOpacity: 0.12,
       shadowRadius: 6,
       elevation: 3,
     },
     lg: {
-      shadowColor: "#000000",
+      shadowColor: "#1E40AF",
       shadowOffset: { width: 0, height: 10 },
-      shadowOpacity: 0.15,
+      shadowOpacity: 0.18,
       shadowRadius: 15,
       elevation: 5,
+    },
+  },
+};
+
+export const DISTRIBUTION_DARK_THEME: ThemeTokens = {
+  name: "distribution-dark",
+
+  primary: "#3B82F6", // blue-500 — más brillante sobre fondo oscuro
+  secondary: "#94A3B8", // slate-400
+  accent: "#FB923C", // orange-400
+
+  bg: {
+    page: "#0F172A", // slate-900
+    card: "#1E293B", // slate-800
+    popover: "#1E293B",
+    muted: "#334155", // slate-700
+    accent: "#1E3A5F", // azul oscuro
+    hover: "#334155",
+    disabled: "#1E293B",
+    inverse: "#F8FAFC",
+  },
+
+  text: {
+    primary: "#F8FAFC", // slate-50
+    secondary: "#94A3B8", // slate-400
+    tertiary: "#64748B", // slate-500
+    muted: "#64748B",
+    accent: "#93C5FD", // blue-300
+    inverse: "#0F172A",
+    disabled: "#475569", // slate-600
+    onPrimary: "#FFFFFF",
+    onSecondary: "#0F172A",
+    onAccent: "#FFFFFF",
+    onDanger: "#FFFFFF",
+    onSuccess: "#FFFFFF",
+  },
+
+  icon: {
+    primary: "#F8FAFC",
+    secondary: "#94A3B8",
+    tertiary: "#64748B",
+    inverse: "#0F172A",
+    disabled: "#475569",
+  },
+
+  border: {
+    default: "#334155", // slate-700
+    light: "#1E293B", // slate-800
+    strong: "#475569", // slate-600
+    focus: "#3B82F6",
+  },
+
+  success: "#34D399", // emerald-400
+  warning: "#FB923C", // orange-400
+  danger: "#F87171", // red-400
+  info: "#60A5FA", // blue-400
+
+  successLight: "#064E3B",
+  warningLight: "#431407",
+  dangerLight: "#450A0A",
+  infoLight: "#1E3A5F",
+
+  ring: "#3B82F6",
+  input: "#334155",
+
+  gradient: {
+    primary: ["#3B82F6", "#1D4ED8"],
+    accent: ["#FB923C", "#EA580C"],
+  },
+
+  shadow: {
+    sm: {
+      shadowColor: "#000000",
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.3,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    md: {
+      shadowColor: "#000000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.4,
+      shadowRadius: 6,
+      elevation: 4,
+    },
+    lg: {
+      shadowColor: "#000000",
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.5,
+      shadowRadius: 15,
+      elevation: 8,
     },
   },
 };

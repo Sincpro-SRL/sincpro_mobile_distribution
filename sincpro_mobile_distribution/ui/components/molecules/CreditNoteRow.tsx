@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import {
   CreditNote,
   ECreditNotePaymentState,
@@ -6,11 +7,9 @@ import { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
 import { customerService } from "@sincpro/mobile-distribution/services/customer.service";
 import { Display } from "@sincpro/mobile-ui/Display";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { tv } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { TouchableOpacity, View } from "react-native";
-import { useNavigate } from "react-router-native";
 
 const statusIndicator = tv({
   base: "w-2 h-2 rounded-full",
@@ -46,7 +45,7 @@ export function CreditNoteRow({
   onPress,
   showNavigateToDetail = true,
 }: CreditNoteRowProps) {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const handlePress = async () => {
     if (onPress) {
@@ -60,11 +59,9 @@ export function CreditNoteRow({
         resolvedCustomer =
           (await customerService.getCustomerByRemoteId(creditNote.customerId)) ?? undefined;
       }
-      navigate(AppScreen.CREDIT_NOTE_DETAIL, {
-        state: {
-          creditNote,
-          customer: resolvedCustomer,
-        },
+      (navigation as any).navigate(AppScreen.CREDIT_NOTE_DETAIL as never, {
+        creditNote,
+        customer: resolvedCustomer,
       });
     }
   };

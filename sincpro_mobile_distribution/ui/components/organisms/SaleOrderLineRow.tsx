@@ -2,7 +2,6 @@ import { SaleOrderLine } from "@sincpro/mobile-distribution/domain/sale_order";
 import { SaleOrderLinePriceBadges } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { Display } from "@sincpro/mobile-ui";
 import BoxIcon from "@sincpro/mobile-ui/icons/BoxIcon";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { TouchableOpacity, View } from "react-native";

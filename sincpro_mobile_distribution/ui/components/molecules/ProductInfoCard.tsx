@@ -112,9 +112,7 @@ function ProductPriceListSection({
           <Typography.Text className="text-xs text-text-tertiary mb-1 text-center">
             {`Precio Estándar`}
           </Typography.Text>
-          <Typography.Text bold className="text-base text-text-primary">
-            {`₡${defaultPrice.toFixed(2)}`}
-          </Typography.Text>
+          <Display.Monetary bold textVariant="body" value={defaultPrice} />
         </View>
       </View>
     );
@@ -141,9 +139,7 @@ function ProductPriceListSection({
           <Typography.Text className="text-xs text-text-tertiary mb-1 text-center">
             {`Estándar`}
           </Typography.Text>
-          <Typography.Text bold className="text-base text-text-primary">
-            {`₡${defaultPrice.toFixed(2)}`}
-          </Typography.Text>
+          <Display.Monetary bold textVariant="body" value={defaultPrice} />
           <Typography.Text className="text-[10px] text-text-tertiary mt-0.5">
             {`Precio Base`}
           </Typography.Text>
@@ -162,9 +158,7 @@ function ProductPriceListSection({
             >
               {info.priceListName}
             </Typography.Text>
-            <Typography.Text bold className="text-base text-text-primary">
-              {`₡${info.price.toFixed(2)}`}
-            </Typography.Text>
+            <Display.Monetary bold textVariant="body" value={info.price} />
             <Typography.Text className="text-[10px] text-text-tertiary mt-0.5">
               {info.currency}
             </Typography.Text>

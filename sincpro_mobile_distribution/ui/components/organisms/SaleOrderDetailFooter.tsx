@@ -1,7 +1,6 @@
 import { ESaleOrderStatus, SaleOrder } from "@sincpro/mobile-distribution/domain/sale_order";
 import { Display } from "@sincpro/mobile-ui/Display";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { createContext, ReactNode, useContext } from "react";
 import { View } from "react-native";

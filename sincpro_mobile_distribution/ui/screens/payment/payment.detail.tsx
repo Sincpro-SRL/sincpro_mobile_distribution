@@ -1,3 +1,4 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ReceiptExporterAdapter } from "@sincpro/mobile/adapters/ReceiptExporter.adapter";
 import { CreditNote } from "@sincpro/mobile-distribution/domain/credit_note";
 import { Customer } from "@sincpro/mobile-distribution/domain/customer";
@@ -14,14 +15,11 @@ import { Display } from "@sincpro/mobile-ui/Display";
 import { Feedback } from "@sincpro/mobile-ui/Feedback";
 import { Form } from "@sincpro/mobile-ui/Form";
 import MoneyReceiveIcon from "@sincpro/mobile-ui/icons/MoneyReceiveIcon";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { isValidElement, useRef, useState } from "react";
 import { View } from "react-native";
-import { useLocation, useNavigate } from "react-router-native";
 
 import { PaymentDetailProvider, usePaymentDetail } from "./payment.detail.context";
 
@@ -249,7 +247,7 @@ function PaymentCreditSection({
 }
 
 function PaymentDetailContent() {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const { payment, isLoading, error, refresh, onBack } = usePaymentDetail();
   const receiptRef = useRef<View>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -258,7 +256,7 @@ function PaymentDetailContent() {
     if (onBack) {
       onBack();
     } else {
-      navigate(-1);
+      navigation.goBack();
     }
   }
 
@@ -296,7 +294,7 @@ function PaymentDetailContent() {
       onBack={handleBack}
       onRefresh={refresh}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Groups>
@@ -377,9 +375,9 @@ export function PaymentDetailScreen(props: {
   payment?: Payment;
   onBack?: () => void;
 }) {
-  const location = useLocation();
-  const navigationPayment = location.state?.payment as Payment | undefined;
-  const navigationPaymentId = location.state?.paymentId as string | undefined;
+  const route = useRoute();
+  const navigationPayment = (route.params as any)?.payment as Payment | undefined;
+  const navigationPaymentId = (route.params as any)?.paymentId as string | undefined;
 
   const initialPayment = props.payment ?? navigationPayment;
   const paymentId = props.paymentId ?? navigationPaymentId ?? initialPayment?.uuid;

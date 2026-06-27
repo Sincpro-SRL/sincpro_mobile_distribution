@@ -1,6 +1,5 @@
 import { CustomerListTemplate } from "@sincpro/mobile-distribution/ui/components/templates";
-import { Form } from "@sincpro/mobile-ui";
-import { theme } from "@sincpro/mobile-ui/theme";
+import { AppBar } from "@sincpro/mobile-ui/Navigation/Navigation.AppBar";
 import { ListViewV2 } from "@sincpro/mobile-ui/views/ListViewV2";
 import { useEffect } from "react";
 
@@ -49,15 +48,6 @@ function CustomerListScreenContent() {
       onViewDetail={handleViewDetail}
       title="Clientes"
     >
-      <CustomerListTemplate.HeaderActions>
-        <Form.Button
-          className="bg-bg-card"
-          onPress={handleCreateCustomer}
-          size="small"
-          title="Registrar nuevo cliente"
-          variant="outline"
-        />
-      </CustomerListTemplate.HeaderActions>
       <CustomerListTemplate.Filters>
         <ListViewV2.Header.Filters.Chips>
           {FILTER_OPTIONS.map((option) => (
@@ -70,6 +60,9 @@ function CustomerListScreenContent() {
           ))}
         </ListViewV2.Header.Filters.Chips>
       </CustomerListTemplate.Filters>
+      <CustomerListTemplate.AppBarActions>
+        <AppBar.Action icon="add" onPress={handleCreateCustomer} tone="tinted" />
+      </CustomerListTemplate.AppBarActions>
     </CustomerListTemplate>
   );
 }

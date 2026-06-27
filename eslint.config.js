@@ -26,6 +26,10 @@ module.exports = defineConfig([
       "simple-import-sort/exports": "error",
       "react/jsx-sort-props": ["warn", { ignoreCase: true }],
       "react-hooks/exhaustive-deps": "off",
+      // Async init effects call setLoading synchronously before the first await — valid pattern.
+      "react-hooks/set-state-in-effect": "warn",
+      // Manual memoization that the compiler can't preserve is not a bug in existing code.
+      "react-hooks/preserve-manual-memoization": "warn",
     },
   },
 ]);

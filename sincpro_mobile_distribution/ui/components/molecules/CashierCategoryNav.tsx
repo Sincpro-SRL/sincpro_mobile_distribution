@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { EPaymentType } from "@sincpro/mobile-distribution/domain/payment";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
 import { Display } from "@sincpro/mobile-ui/Display";
@@ -6,20 +7,19 @@ import WalletMoneyIcon from "@sincpro/mobile-ui/icons/WalletMoneyIcon";
 import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { TouchableOpacity, View } from "react-native";
-import { useNavigate } from "react-router-native";
 
 function CashierCategoryNav() {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   function handleNavigateToOrders() {
-    navigate(AppScreen.CASHIER_HISTORY, {
-      state: { paymentType: EPaymentType.REGULAR_PAYMENT },
+    (navigation as any).navigate(AppScreen.CASHIER_HISTORY as never, {
+      paymentType: EPaymentType.REGULAR_PAYMENT,
     });
   }
 
   function handleNavigateToCredits() {
-    navigate(AppScreen.CASHIER_HISTORY, {
-      state: { paymentType: EPaymentType.CREDIT_PAYMENT },
+    (navigation as any).navigate(AppScreen.CASHIER_HISTORY as never, {
+      paymentType: EPaymentType.CREDIT_PAYMENT,
     });
   }
 

@@ -1,13 +1,11 @@
+import { useRoute } from "@react-navigation/native";
 import type { Customer } from "@sincpro/mobile-distribution/domain/customer";
 import { CustomerInfoCard } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { InvoiceList } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { Display } from "@sincpro/mobile-ui/Display";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useCallback, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-native";
 
 import {
   EInvoiceFilter,
@@ -59,7 +57,7 @@ function InvoiceSelectionContent() {
       onBack={handleBack}
       onRefresh={refreshFromBackend}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER}>
+      <FormViewV2.Header variant="default">
         <FormViewV2.Header.ActionsBar>
           <Form.Button
             className="flex-1"
@@ -109,8 +107,8 @@ interface InvoiceSelectionScreenProps {
 }
 
 export function InvoiceSelectionScreen({ customer }: InvoiceSelectionScreenProps) {
-  const location = useLocation();
-  const customerFromState = location.state?.customer as Customer | undefined;
+  const route = useRoute();
+  const customerFromState = (route.params as any)?.customer as Customer | undefined;
   const resolvedCustomer = customer ?? customerFromState;
 
   if (!resolvedCustomer) {

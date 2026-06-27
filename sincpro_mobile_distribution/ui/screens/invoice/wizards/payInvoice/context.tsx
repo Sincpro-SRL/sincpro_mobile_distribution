@@ -1,3 +1,4 @@
+import { StackActions, useNavigation, useRoute } from "@react-navigation/native";
 import { DomainNetworkError } from "@sincpro/mobile/exceptions";
 import { Invoice } from "@sincpro/mobile-distribution/domain/invoice";
 import { Payment } from "@sincpro/mobile-distribution/domain/payment";
@@ -6,7 +7,6 @@ import { invoiceService } from "@sincpro/mobile-distribution/services/invoice.se
 import { paymentService } from "@sincpro/mobile-distribution/services/payment.service";
 import { useConfirmationContext } from "@sincpro/mobile-ui/Dialog/Confirmation.context";
 import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-native";
 
 export enum EPayInvoiceStep {
   PAYMENT_SETUP = "PAYMENT_SETUP",
@@ -53,13 +53,12 @@ interface PayInvoiceWizardProviderProps {
 }
 
 export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigation = useNavigation();
+  const route = useRoute();
   const { show, hide } = useConfirmationContext();
-  const locationState = location.state as { invoice?: Invoice } | undefined;
 
   const [invoice, setInvoice] = useState<Invoice | null>(
-    locationState?.invoice ? Invoice.fromJSON(locationState.invoice) : null,
+    (route.params as any)?.invoice ? Invoice.fromJSON((route.params as any).invoice) : null,
   );
   const [payments, setPayments] = useState<Payment[]>([]);
   const [paymentMode, setPaymentMode] = useState<EPaymentMode>(EPaymentMode.SINGLE);
@@ -161,10 +160,9 @@ export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderP
     setIsLoading(true);
     try {
       const paidInvoice = await invoiceService.payInvoice(invoice.uuid, payments);
-      navigate(AppScreen.ORDER_RECEIPT, {
-        replace: true,
-        state: { entity: paidInvoice },
-      });
+      navigation.dispatch(
+        StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: paidInvoice }),
+      );
     } catch (error) {
       console.error("Error processing invoice payment:", error);
 
@@ -179,10 +177,9 @@ export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderP
           cancelText: "Cancelar",
           onConfirm: () => {
             hide();
-            navigate(AppScreen.ORDER_RECEIPT, {
-              replace: true,
-              state: { entity: invoice },
-            });
+            navigation.dispatch(
+              StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: invoice }),
+            );
           },
           onCancel: () => hide(),
         });
@@ -194,10 +191,9 @@ export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderP
           cancelText: "Cancelar",
           onConfirm: () => {
             hide();
-            navigate(AppScreen.ORDER_RECEIPT, {
-              replace: true,
-              state: { entity: invoice },
-            });
+            navigation.dispatch(
+              StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: invoice }),
+            );
           },
           onCancel: () => hide(),
         });
@@ -205,7 +201,7 @@ export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderP
     } finally {
       setIsLoading(false);
     }
-  }, [invoice, payments, navigate, show, hide]);
+  }, [invoice, payments, navigation, show, hide]);
 
   const handlePayPenalization = useCallback(async (): Promise<void> => {
     if (!payments || payments.length === 0 || !invoice) {
@@ -214,11 +210,13 @@ export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderP
 
     setIsLoading(true);
     try {
-      const firstPayment = payments[0];
-      firstPayment.targetUUID = invoice.uuid;
-      firstPayment.targetRemoteId = invoice.remoteId ?? undefined;
+      const firstPayment = {
+        ...payments[0],
+        targetUUID: invoice.uuid,
+        targetRemoteId: invoice.remoteId ?? undefined,
+      };
 
-      await paymentService.payPenalization(firstPayment);
+      await paymentService.payPenalization(firstPayment as unknown as Payment);
 
       const refreshedInvoice = await invoiceService.refreshInvoiceFromBackend(invoice.uuid);
       if (refreshedInvoice) {
@@ -249,25 +247,21 @@ export function PayInvoiceWizardProvider({ children }: PayInvoiceWizardProviderP
   }, [invoice, payments, show, hide]);
 
   const handleBackToOverview = useCallback((): void => {
-    navigate(-1);
-  }, [navigate]);
+    navigation.goBack();
+  }, [navigation]);
 
   const handleViewReceipt = useCallback((): void => {
     if (!invoice) return;
-    navigate(AppScreen.ORDER_RECEIPT, {
-      replace: true,
-      state: { entity: invoice },
-    });
-  }, [invoice, navigate]);
+    navigation.dispatch(StackActions.replace(AppScreen.ORDER_RECEIPT, { entity: invoice }));
+  }, [invoice, navigation]);
 
   const handleViewPaymentHistory = useCallback((): void => {
     if (!invoice?.payments || invoice.payments.isEmpty) return;
     const invoicePayments = invoice.payments.toArray();
-    navigate(AppScreen.CASHIER_HISTORY, {
-      replace: true,
-      state: { filteredPayments: invoicePayments },
-    });
-  }, [invoice, navigate]);
+    navigation.dispatch(
+      StackActions.replace(AppScreen.CASHIER_HISTORY, { filteredPayments: invoicePayments }),
+    );
+  }, [invoice, navigation]);
 
   const goToMultiplePayments = useCallback(
     (wizard: { goToStep: (step: EPayInvoiceStep) => void }): void => {

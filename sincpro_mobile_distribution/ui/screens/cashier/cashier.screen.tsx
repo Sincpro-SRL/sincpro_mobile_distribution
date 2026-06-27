@@ -9,7 +9,6 @@ import {
 } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { View } from "react-native";
 
 import { CashierScreenProvider, useCashierScreen } from "./cashier.screen.context";
@@ -41,7 +40,7 @@ function CashierScreenContent() {
     >
       <FormViewV2.Header
         logoSource={require("../../../../assets/DISTRIBUTION/logo.png")}
-        variant={EVariantScreenHeader.ONLY_LOGO}
+        variant="default"
       />
 
       <FormViewV2.Content>

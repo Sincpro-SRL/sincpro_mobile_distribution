@@ -1,11 +1,9 @@
 import { ProductStockFilters } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { ProductListTemplate } from "@sincpro/mobile-distribution/ui/components/templates";
-import { Form } from "@sincpro/mobile-ui/Form";
+import { AppBar } from "@sincpro/mobile-ui/Navigation/Navigation.AppBar";
 import { useEffect } from "react";
 
 import { ProductListProvider, useProductList } from "./product.list.context";
-
-const IconButton = Form.IconButton;
 
 function ProductListScreenContent() {
   const {
@@ -45,16 +43,9 @@ function ProductListScreenContent() {
         <ProductStockFilters activeFilter={stockFilter} onFilterChange={filterByStock} />
       </ProductListTemplate.Filters>
 
-      <ProductListTemplate.FloatingButton>
-        <IconButton
-          icon="qrcode"
-          onPress={handleOpenScanner}
-          rounded
-          size="large"
-          type="antdesign"
-          variant="primary"
-        />
-      </ProductListTemplate.FloatingButton>
+      <ProductListTemplate.AppBarActions>
+        <AppBar.Action icon="scan-outline" onPress={handleOpenScanner} />
+      </ProductListTemplate.AppBarActions>
     </ProductListTemplate>
   );
 }

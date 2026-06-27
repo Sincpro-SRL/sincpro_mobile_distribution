@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { UIEventBus } from "@sincpro/mobile/infrastructure/ui/UIEventBus";
 import { EProductStockFilter, Product } from "@sincpro/mobile-distribution/domain/product";
 import {
@@ -14,7 +15,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface IProductListContext {
   products: Product[];
@@ -129,22 +129,22 @@ export function ProductListProvider({
     setStockFilter(EProductStockFilter.ALL);
   }, []);
 
-  const navigate = useNavigate();
+  const navigation = useNavigation();
 
   const handleSelectProduct = useCallback(
     (product: Product) => {
-      navigate(AppScreen.PRODUCT_DETAIL, { state: { product } });
+      (navigation as any).navigate(AppScreen.PRODUCT_DETAIL, { product });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    navigation.goBack();
+  }, [navigation]);
 
   const handleOpenScanner = useCallback(() => {
-    navigate(AppScreen.SCANNER);
-  }, [navigate]);
+    navigation.navigate(AppScreen.SCANNER as never);
+  }, [navigation]);
 
   useEffect(() => {
     if (initialSearchQuery) {

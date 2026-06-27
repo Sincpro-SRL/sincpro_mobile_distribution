@@ -1,9 +1,7 @@
-import { PlainLayout, TabNavigatorLayout } from "@sincpro/mobile";
-import DatabaseListScreen from "@sincpro/mobile/ui/screens/database/database.list";
-import DeadLetterQueueList from "@sincpro/mobile/ui/screens/dead_letter_queue/dead_letter_queue.list";
-import EventsScreen from "@sincpro/mobile/ui/screens/events/events.list";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { DatabaseList, DeadLetterQueueList, EventsScreen } from "@sincpro/mobile/ui/screens";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
-import { useDistributionGlobal } from "@sincpro/mobile-distribution/entrypoints/ui/context";
 import { CashierScreen } from "@sincpro/mobile-distribution/ui/screens/cashier";
 import {
   CreateCreditNoteWizard,
@@ -49,115 +47,180 @@ import {
   ServerScreen,
   SettingsScreen,
 } from "@sincpro/mobile-odoo/ui/screens";
+import { BottomInsetContext } from "@sincpro/mobile-ui";
 import BoxTimeIcon from "@sincpro/mobile-ui/icons/BoxTimeIcon";
 import CashierIcon from "@sincpro/mobile-ui/icons/CashierIcon";
 import HomeIcon from "@sincpro/mobile-ui/icons/HomeIcon";
 import PinIcon from "@sincpro/mobile-ui/icons/PinIcon";
 import ProfileIcon from "@sincpro/mobile-ui/icons/ProfileIcon";
-import React, { useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-native";
+import {
+  BottomNav,
+  type BottomNavItem,
+} from "@sincpro/mobile-ui/Navigation/Navigation.BottomNav";
+import { useTheme } from "@sincpro/mobile-ui/theme";
+import { View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const DistributionRoutes = () => {
-  const navigate = useNavigate();
-  const { session, authIsLoading, serverParams } = useDistributionGlobal();
+import { useDistributionGlobal } from "./context";
 
-  useEffect(() => {
-    if (authIsLoading) return;
-    if (!serverParams || !session) {
-      navigate(AppScreen.LOGIN, { replace: true });
-    } else {
-      navigate(AppScreen.MAIN, { replace: true });
-    }
-  }, [session, authIsLoading, serverParams]);
+const Stack = createNativeStackNavigator();
+const Tabs = createBottomTabNavigator();
+
+const LOGO = require("../../../assets/DISTRIBUTION/logo.png");
+
+const AUTH_BACKGROUND = {
+  colors: ["#1D4ED8", "#2563EB", "#3B82F6"] as const,
+  pattern: "grid" as const,
+  patternOpacity: 0.08,
+};
+
+const TAB_ITEMS: BottomNavItem[] = [
+  { key: AppScreen.ROUTES, customIcon: PinIcon, label: "Ruta" },
+  { key: AppScreen.SALE_ORDER_LIST, customIcon: BoxTimeIcon, label: "Órdenes" },
+  { key: AppScreen.MAIN, customIcon: HomeIcon, label: "Principal" },
+  { key: AppScreen.CASHIER, customIcon: CashierIcon, label: "Caja" },
+  { key: AppScreen.PROFILE, customIcon: ProfileIcon, label: "Perfil" },
+];
+
+const FLOATING_TAB_INSET = 72;
+
+function LoginWithLogo() {
+  return <LoginScreen background={AUTH_BACKGROUND} logoSource={LOGO} />;
+}
+
+function ServerWithLogo() {
+  return <ServerScreen background={AUTH_BACKGROUND} logoSource={LOGO} />;
+}
+
+function ResetAccountWithLogo() {
+  return <ResetAccountScreen background={AUTH_BACKGROUND} logoSource={LOGO} />;
+}
+
+function ProfileTab() {
+  return <ProfileScreen mainRoute={AppScreen.MAIN} />;
+}
+
+function MainTabs() {
+  const insets = useSafeAreaInsets();
 
   return (
-    <Routes>
-      <Route
-        element={
-          <TabNavigatorLayout>
-            <TabNavigatorLayout.Tabs>
-              <TabNavigatorLayout.Tab Icon={PinIcon} label="Ruta" path={AppScreen.ROUTES} />
-              <TabNavigatorLayout.Tab
-                Icon={BoxTimeIcon}
-                label="Órdenes"
-                path={AppScreen.SALE_ORDER_LIST}
+    <BottomInsetContext.Provider value={FLOATING_TAB_INSET}>
+      <Tabs.Navigator
+        initialRouteName={AppScreen.MAIN}
+        screenOptions={{ headerShown: false }}
+        tabBar={(props) => {
+          const activeKey = props.state.routes[props.state.index].name;
+          return (
+            <View
+              pointerEvents="box-none"
+              style={{
+                position: "absolute",
+                left: 16,
+                right: 16,
+                bottom: insets.bottom + 12,
+              }}
+            >
+              <BottomNav
+                activeColor="accent"
+                indicator="pill-text"
+                items={TAB_ITEMS}
+                onChange={(key) => {
+                  props.navigation.navigate(key as never);
+                }}
+                shape="floating"
+                showLabels
+                value={activeKey}
               />
-              <TabNavigatorLayout.Tab
-                Icon={HomeIcon}
-                label="Principal"
-                path={AppScreen.MAIN}
-              />
-              <TabNavigatorLayout.Tab
-                Icon={CashierIcon}
-                label="Caja"
-                path={AppScreen.CASHIER}
-              />
-              <TabNavigatorLayout.Tab
-                Icon={ProfileIcon}
-                label="Perfil"
-                path={AppScreen.PROFILE}
-              />
-            </TabNavigatorLayout.Tabs>
-          </TabNavigatorLayout>
-        }
+            </View>
+          );
+        }}
       >
-        <Route element={<HomeScreen />} path={AppScreen.MAIN} />
-        <Route element={<RouteScreen />} path={AppScreen.ROUTES} />
-        <Route element={<SaleOrderListScreen />} path={AppScreen.SALE_ORDER_LIST} />
-        <Route
-          element={
-            <ProfileScreen
-              logoSource={require("../../../assets/DISTRIBUTION/logo.png")}
-              mainRoute={AppScreen.MAIN}
-            />
-          }
-          path={AppScreen.PROFILE}
-        />
-        <Route element={<CashierScreen />} path={AppScreen.CASHIER} />
-        <Route element={<OdooPortalScreen />} path={AppScreen.ODOO_PORTAL} />
-      </Route>
-      <Route element={<PlainLayout />}>
-        <Route
-          element={
-            <LoginScreen logoSource={require("../../../assets/DISTRIBUTION/logo.png")} />
-          }
-          path={AppScreen.LOGIN}
-        />
-        <Route element={<ResetAccountScreen />} path={AppScreen.RESET_ACCOUNT} />
-        <Route element={<ProductListScreen />} path={AppScreen.PRODUCT_LIST} />
-        <Route element={<ProductDetailScreen />} path={AppScreen.PRODUCT_DETAIL} />
-        <Route element={<CustomerListScreen />} path={AppScreen.CUSTOMER_LIST} />
-        <Route element={<CustomerDetailScreen />} path={AppScreen.CUSTOMER_DETAIL} />
-        <Route element={<CustomerFormScreen />} path={AppScreen.CUSTOMER_CREATE} />
-        <Route element={<CustomerOrdersListScreen />} path={AppScreen.CUSTOMER_ORDERS_LIST} />
-        <Route
-          element={<CustomerOrdersDetailScreen />}
-          path={AppScreen.CUSTOMER_ORDERS_DETAIL}
-        />
-        <Route element={<RouteScreen />} path={AppScreen.ROUTES} />
-        <Route element={<SaleOrderDetailScreen />} path={AppScreen.SALE_ORDER_DETAIL} />
-        <Route element={<SaleOrderCreateOrderWizard />} path={AppScreen.SALE_ORDER_CREATE} />
-        <Route element={<SaleOrderUpdateWizard />} path={AppScreen.SALE_ORDER_UPDATE} />
-        <Route element={<SaleOrderPaymentWizard />} path={AppScreen.SALE_ORDER_PAYMENT} />
-        <Route element={<OrderReceiptScreen />} path={AppScreen.ORDER_RECEIPT} />
-        <Route element={<CreditNoteDetailScreen />} path={AppScreen.CREDIT_NOTE_DETAIL} />
-        <Route element={<CreateCreditNoteWizard />} path={AppScreen.CREDIT_NOTE_CREATE} />
-        <Route element={<PayCreditNoteWizard />} path={AppScreen.CREDIT_NOTE_PAYMENT} />
-        <Route element={<InvoiceSelectionScreen />} path={AppScreen.INVOICE_DETAIL} />
-        <Route element={<InvoiceCustomerListScreen />} path={AppScreen.INVOICE_LIST} />
-        <Route element={<PayInvoiceWizardScreen />} path={AppScreen.INVOICE_PAYMENT} />
-        <Route element={<PaymentHistoryScreen />} path={AppScreen.PAYMENT_HISTORY} />
-        <Route element={<PaymentDetailScreen />} path={AppScreen.PAYMENT_DETAIL} />
-        <Route element={<PaymentHistoryScreen />} path={AppScreen.CASHIER_HISTORY} />
-        <Route element={<ScannerScreen />} path={AppScreen.SCANNER} />
-        <Route element={<ServerScreen />} path={AppScreen.SERVER} />
-        <Route element={<SettingsScreen />} path={AppScreen.SETTINGS} />
-        <Route element={<DatabaseListScreen />} path={AppScreen.DATABASE_LIST} />
-        <Route element={<DeadLetterQueueList />} path={AppScreen.DEAD_LETTER_QUEUE} />
-        <Route element={<EventsScreen />} path={AppScreen.EVENTS} />
-      </Route>
-    </Routes>
+        <Tabs.Screen component={RouteScreen} name={AppScreen.ROUTES} />
+        <Tabs.Screen component={SaleOrderListScreen} name={AppScreen.SALE_ORDER_LIST} />
+        <Tabs.Screen component={HomeScreen} name={AppScreen.MAIN} />
+        <Tabs.Screen component={CashierScreen} name={AppScreen.CASHIER} />
+        <Tabs.Screen component={ProfileTab} name={AppScreen.PROFILE} />
+      </Tabs.Navigator>
+    </BottomInsetContext.Provider>
   );
-};
+}
+
+function DistributionRoutes() {
+  const { session, serverParams } = useDistributionGlobal();
+  const isAuthenticated = !!session && !!serverParams;
+  const theme = useTheme();
+
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false, contentStyle: { backgroundColor: theme.bg.page } }}
+    >
+      {isAuthenticated ? (
+        <>
+          <Stack.Screen component={MainTabs} name="DistributionTabs" />
+          <Stack.Screen component={OdooPortalScreen} name={AppScreen.ODOO_PORTAL} />
+          <Stack.Screen component={ProductListScreen} name={AppScreen.PRODUCT_LIST} />
+          <Stack.Screen component={ProductDetailScreen} name={AppScreen.PRODUCT_DETAIL} />
+          <Stack.Screen component={CustomerListScreen} name={AppScreen.CUSTOMER_LIST} />
+          <Stack.Screen component={CustomerDetailScreen} name={AppScreen.CUSTOMER_DETAIL} />
+          <Stack.Screen component={CustomerFormScreen} name={AppScreen.CUSTOMER_CREATE} />
+          <Stack.Screen
+            component={CustomerOrdersListScreen}
+            name={AppScreen.CUSTOMER_ORDERS_LIST}
+          />
+          <Stack.Screen
+            component={CustomerOrdersDetailScreen}
+            name={AppScreen.CUSTOMER_ORDERS_DETAIL}
+          />
+          <Stack.Screen
+            component={SaleOrderDetailScreen}
+            name={AppScreen.SALE_ORDER_DETAIL}
+          />
+          <Stack.Screen
+            component={SaleOrderCreateOrderWizard}
+            name={AppScreen.SALE_ORDER_CREATE}
+          />
+          <Stack.Screen
+            component={SaleOrderUpdateWizard}
+            name={AppScreen.SALE_ORDER_UPDATE}
+          />
+          <Stack.Screen
+            component={SaleOrderPaymentWizard}
+            name={AppScreen.SALE_ORDER_PAYMENT}
+          />
+          <Stack.Screen component={OrderReceiptScreen} name={AppScreen.ORDER_RECEIPT} />
+          <Stack.Screen
+            component={CreditNoteDetailScreen}
+            name={AppScreen.CREDIT_NOTE_DETAIL}
+          />
+          <Stack.Screen
+            component={CreateCreditNoteWizard}
+            name={AppScreen.CREDIT_NOTE_CREATE}
+          />
+          <Stack.Screen
+            component={PayCreditNoteWizard}
+            name={AppScreen.CREDIT_NOTE_PAYMENT}
+          />
+          <Stack.Screen component={InvoiceSelectionScreen} name={AppScreen.INVOICE_DETAIL} />
+          <Stack.Screen component={InvoiceCustomerListScreen} name={AppScreen.INVOICE_LIST} />
+          <Stack.Screen component={PayInvoiceWizardScreen} name={AppScreen.INVOICE_PAYMENT} />
+          <Stack.Screen component={PaymentHistoryScreen} name={AppScreen.PAYMENT_HISTORY} />
+          <Stack.Screen component={PaymentDetailScreen} name={AppScreen.PAYMENT_DETAIL} />
+          <Stack.Screen component={PaymentHistoryScreen} name={AppScreen.CASHIER_HISTORY} />
+          <Stack.Screen component={ScannerScreen} name={AppScreen.SCANNER} />
+          <Stack.Screen component={SettingsScreen} name={AppScreen.SETTINGS} />
+          <Stack.Screen component={DatabaseList} name={AppScreen.DATABASE_LIST} />
+          <Stack.Screen component={DeadLetterQueueList} name={AppScreen.DEAD_LETTER_QUEUE} />
+          <Stack.Screen component={EventsScreen} name={AppScreen.EVENTS} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen component={LoginWithLogo} name={AppScreen.LOGIN} />
+          <Stack.Screen component={ServerWithLogo} name={AppScreen.SERVER} />
+          <Stack.Screen component={ResetAccountWithLogo} name={AppScreen.RESET_ACCOUNT} />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+}
 
 export default DistributionRoutes;

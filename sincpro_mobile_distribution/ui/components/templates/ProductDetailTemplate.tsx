@@ -2,7 +2,6 @@ import { Product } from "@sincpro/mobile-distribution/domain/product";
 import { PriceListID } from "@sincpro/mobile-distribution/domain/product/price_list";
 import { ProductInfoCard } from "@sincpro/mobile-distribution/ui/components/molecules";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { Children, isValidElement, ReactElement, ReactNode } from "react";
 
 export interface IProductDetailPayload {
@@ -58,7 +57,7 @@ function ProductDetailTemplateRoot({
       name={title}
       onBack={onBack}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Form>

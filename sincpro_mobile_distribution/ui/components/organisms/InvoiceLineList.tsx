@@ -1,6 +1,5 @@
 import type { InvoiceLine } from "@sincpro/mobile-distribution/domain/invoice";
 import { Display } from "@sincpro/mobile-ui";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { View } from "react-native";
 

@@ -17,7 +17,9 @@ const cronSyncDistributionApp = new CronWorker(
   "SYNC_DISTRIBUTION_APP",
   syncDistributionApp,
   15,
-  true,
+  {
+    requiresAuth: true,
+  },
 );
 
 export default cronSyncDistributionApp;

@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { groupBy } from "@sincpro/mobile/tools/utils/collections";
 import type { Payment } from "@sincpro/mobile-distribution/domain/payment";
 import { AppScreen } from "@sincpro/mobile-distribution/entrypoints/ui/AppScreen";
@@ -13,7 +14,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useNavigate } from "react-router-native";
 
 interface ICashierScreenContext {
   payments: Payment[];
@@ -41,7 +41,7 @@ interface CashierScreenProviderProps {
 
 export function CashierScreenProvider({ children }: CashierScreenProviderProps) {
   const { startDateRoute, endDateRoute, loadSettings, formatDate } = useDistributionGlobal();
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -99,39 +99,39 @@ export function CashierScreenProvider({ children }: CashierScreenProviderProps) 
         startDateRoute ?? undefined,
         endDateRoute ?? undefined,
       );
-      navigate(AppScreen.ORDER_RECEIPT, { state: { entity: report } });
+      (navigation as any).navigate(AppScreen.ORDER_RECEIPT as never, { entity: report });
     } catch (error) {
       console.error("Error generating cash closure report:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [navigate, startDateRoute, endDateRoute]);
+  }, [navigation, startDateRoute, endDateRoute]);
 
   const handleViewHistory = useCallback(() => {
-    navigate(AppScreen.CASHIER_HISTORY);
-  }, [navigate]);
+    (navigation as any).navigate(AppScreen.CASHIER_HISTORY as never);
+  }, [navigation]);
 
   const handlePaymentPress = useCallback(
     async (payment: Payment) => {
       if (!payment.paidEntity) {
         return;
       }
-      navigate(AppScreen.ORDER_RECEIPT, { state: { entity: payment.paidEntity } });
+      (navigation as any).navigate(AppScreen.ORDER_RECEIPT as never, {
+        entity: payment.paidEntity,
+      });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleFilterByPaymentMethod = useCallback(
     (methodName: string) => {
       const filteredByMethod = payments.filter((p) => p.paymentMethod?.name === methodName);
 
-      navigate(AppScreen.CASHIER_HISTORY, {
-        state: {
-          filteredPayments: filteredByMethod,
-        },
+      (navigation as any).navigate(AppScreen.CASHIER_HISTORY as never, {
+        filteredPayments: filteredByMethod,
       });
     },
-    [navigate, payments],
+    [navigation, payments],
   );
 
   const value: ICashierScreenContext = {

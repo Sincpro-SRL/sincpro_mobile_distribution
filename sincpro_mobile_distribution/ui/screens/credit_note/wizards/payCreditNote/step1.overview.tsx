@@ -10,7 +10,6 @@ import {
 } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { FormViewV2 } from "@sincpro/mobile-ui/views/FormViewV2";
 import type { WizardContextValue } from "@sincpro/mobile-ui/views/Wizard";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useMemo } from "react";
 import { View } from "react-native";
 
@@ -109,7 +108,7 @@ export function StepOverview({ wizard }: StepOverviewProps) {
       name="Devolución de nota de crédito"
       onBack={handleBackToOverview}
     >
-      <FormViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER} />
+      <FormViewV2.Header variant="default" />
 
       <FormViewV2.Content>
         <FormViewV2.Content.Groups>

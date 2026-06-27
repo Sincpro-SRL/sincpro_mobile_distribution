@@ -45,11 +45,10 @@ export function InvoiceLineRow({
             {`× ${line.quantity}`}
           </Typography.Text>
           {discountPercent > 0 && (
-            <View className="bg-success/20 px-1.5 py-0.5 rounded">
-              <Typography.Text className="text-success" variant="captionSmall">
-                {`-${discountPercent}%`}
-              </Typography.Text>
-            </View>
+            <Display.Badge
+              label={`-${discountPercent}%`}
+              variant={Display.BadgeVariants.SUCCESS}
+            />
           )}
         </View>
       </View>

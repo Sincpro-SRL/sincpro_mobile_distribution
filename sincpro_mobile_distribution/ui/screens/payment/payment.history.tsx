@@ -1,7 +1,6 @@
 import CashierPaymentFilters from "@sincpro/mobile-distribution/ui/components/molecules/CashierPaymentFilters";
 import CashierPaymentRow from "@sincpro/mobile-distribution/ui/components/molecules/CashierPaymentRow";
 import { ListViewV2 } from "@sincpro/mobile-ui/views/ListViewV2";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 
 import { PaymentHistoryProvider, usePaymentHistory } from "./payment.history.context";
 
@@ -27,7 +26,7 @@ function PaymentHistoryContent() {
       onRefresh={refreshFromBackend}
       readonly
     >
-      <ListViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER}>
+      <ListViewV2.Header variant="default">
         <ListViewV2.Header.Filters>
           <CashierPaymentFilters
             onClearFilter={clearFilter}

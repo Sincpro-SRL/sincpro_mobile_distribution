@@ -1,12 +1,10 @@
 import { SaleOrderLine } from "@sincpro/mobile-distribution/domain/sale_order";
 import { SaleOrderLineRow } from "@sincpro/mobile-distribution/ui/components/organisms";
 import { Form } from "@sincpro/mobile-ui/Form";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { ListViewV2 } from "@sincpro/mobile-ui/views/ListViewV2";
 import type { WizardContextValue } from "@sincpro/mobile-ui/views/Wizard";
-import { EVariantScreenHeader } from "@sincpro/mobile-ui/widgets/ScreenHeader";
 import { useCallback, useMemo, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 
@@ -95,7 +93,7 @@ export function StepItemSelection({ wizard }: StepItemSelectionProps) {
       onBack={() => goToOverview(wizard)}
       onSearch={handleSearch}
     >
-      <ListViewV2.Header variant={EVariantScreenHeader.FLAT_HEADER}>
+      <ListViewV2.Header variant="default">
         <ListViewV2.Header.Search />
       </ListViewV2.Header>
 

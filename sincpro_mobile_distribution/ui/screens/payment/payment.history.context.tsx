@@ -1,3 +1,4 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import type { IPaymentMethod, Payment } from "@sincpro/mobile-distribution/domain/payment";
 import {
   EPaymentTargetType,
@@ -15,7 +16,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useLocation, useNavigate } from "react-router-native";
 
 interface IPaymentHistoryContext {
   payments: Payment[];
@@ -39,13 +39,15 @@ interface PaymentHistoryProviderProps {
 }
 
 export function PaymentHistoryProvider({ children }: PaymentHistoryProviderProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigation = useNavigation();
+  const route = useRoute();
   const { formatDate } = useDistributionGlobal();
 
-  const filterTargetType = (location.state?.targetType as EPaymentTargetType) || undefined;
-  const filterPaymentType = (location.state?.paymentType as EPaymentType) || undefined;
-  const preFilteredPayments = (location.state?.filteredPayments as Payment[]) || undefined;
+  const filterTargetType =
+    ((route.params as any)?.targetType as EPaymentTargetType) || undefined;
+  const filterPaymentType = ((route.params as any)?.paymentType as EPaymentType) || undefined;
+  const preFilteredPayments =
+    ((route.params as any)?.filteredPayments as Payment[]) || undefined;
 
   const [payments, setPayments] = useState<Payment[]>(preFilteredPayments || []);
   const [isLoading, setIsLoading] = useState(!preFilteredPayments);
@@ -141,14 +143,16 @@ export function PaymentHistoryProvider({ children }: PaymentHistoryProviderProps
       if (!payment.paidEntity) {
         return;
       }
-      navigate(AppScreen.ORDER_RECEIPT, { state: { entity: payment.paidEntity } });
+      (navigation as any).navigate(AppScreen.ORDER_RECEIPT, {
+        entity: payment.paidEntity,
+      });
     },
-    [navigate],
+    [navigation],
   );
 
   const handleBack = useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    navigation.goBack();
+  }, [navigation]);
 
   const value: IPaymentHistoryContext = {
     payments,

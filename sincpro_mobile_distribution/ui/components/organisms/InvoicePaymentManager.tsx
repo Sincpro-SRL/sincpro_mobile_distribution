@@ -4,7 +4,6 @@ import { CREDIT_PAYMENT_METHOD } from "@sincpro/mobile-distribution/domain/setti
 import { Display } from "@sincpro/mobile-ui/Display";
 import { Form } from "@sincpro/mobile-ui/Form";
 import AddItemIcon from "@sincpro/mobile-ui/icons/AddItemIcon";
-import { theme } from "@sincpro/mobile-ui/theme";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { View } from "react-native";
 
@@ -43,9 +42,10 @@ function InvoicePaymentManager({
 
   function handleChangeReference(reference: string) {
     if (payments.length > 0) {
-      const currentPayment = payments[0] as any;
-      currentPayment.paymentReference = reference;
-      setPayments([currentPayment]);
+      const updated = Payment.obj<Payment>({});
+      Object.assign(updated, payments[0]);
+      updated.paymentReference = reference;
+      setPayments([updated]);
     }
   }
 

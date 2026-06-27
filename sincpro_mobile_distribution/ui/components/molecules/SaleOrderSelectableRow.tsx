@@ -1,6 +1,5 @@
 import { SaleOrder } from "@sincpro/mobile-distribution/domain/sale_order";
 import { Display } from "@sincpro/mobile-ui/Display";
-import { cn } from "@sincpro/mobile-ui/theme/tw";
 import { Typography } from "@sincpro/mobile-ui/Typography";
 import { TouchableOpacity, View } from "react-native";
 
